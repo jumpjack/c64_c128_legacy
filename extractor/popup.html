@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Ready64 Scraper</title>
+    <style>
+        body {
+            width: 800px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+        .input-group {
+            margin: 10px 0;
+        }
+        input, button {
+            padding: 5px;
+            margin: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 6px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        #progress {
+            margin: 10px 0;
+            color: #666;
+        }
+        #downloadJson {
+            display: none;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h2>Ready64 Magazine Scraper</h2>
+    
+    <div class="input-group">
+        <label>Numero iniziale: <input type="number" id="startNum" min="1" value="1"></label>
+        <label>Numero finale: <input type="number" id="endNum" min="1" value="10"></label>
+        <button id="startButton">Inizia scraping</button>
+    </div>
+
+    <div id="progress"></div>
+<button id="downloadJson">Scarica JSON</button>
+<button id="downloadHtml">Scarica HTML</button>    <div id="results">
+<table id="dataTable">
+    <thead>
+        <tr>
+            <th>Titolo</th>
+            <th>Descrizione</th>
+            <th>Numero rivista</th>
+            <th>Pagina</th>
+            <th>Autore</th>
+            <th>Categoria</th>
+            <th>Keywords</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
