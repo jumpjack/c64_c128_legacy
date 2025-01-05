@@ -98,8 +98,9 @@ async function startScraping() {
     document.querySelector('#dataTable tbody').innerHTML = '';
     const progressDiv = document.getElementById('progress');
     const downloadBtn = document.getElementById('downloadJson');
+    const downloadBtn2 = document.getElementById('downloadHtml');
     downloadBtn.style.display = 'none';
-
+    downloadBtn2.style.display = 'none';
     for (let i = startNum; i <= endNum; i++) {
         progressDiv.textContent = `Elaborazione numero ${i}...`;
         const data = await fetchPage(i);
@@ -111,7 +112,7 @@ async function startScraping() {
     }
     progressDiv.textContent = 'Scraping completato!';
     downloadBtn.style.display = 'block';
-    document.getElementById('downloadHtml').style.display = 'block';  // Mostra anche il pulsante HTML
+    downloadBtn2.style.display = 'block';
     startButton.disabled = false; 
 
     
@@ -124,7 +125,8 @@ function updateTable(data) {
         const row = tbody.insertRow();
         row.insertCell().innerHTML = "<a href='https://ready64.org/ccc/" + article.link + "'>" + article.titolo + "</a>";
         row.insertCell().textContent = article.descrizione;
-        row.insertCell().textContent = data.numero;
+        const coverLink = article.link.substring(0, article.link.indexOf("pag=")+4) + "001.jpg";
+        row.insertCell().innerHTML = "<a href='https://ready64.org/ccc/" + coverLink + "'>" + data.numero + "</a>";
         row.insertCell().textContent = article.pagine;
         row.insertCell().textContent = article.autore;
         row.insertCell().textContent = article.categoria;
