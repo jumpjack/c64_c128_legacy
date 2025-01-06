@@ -7,5 +7,5 @@ Riferimenti a varie risorse online
     - [Estensione Chrome per estrazione dell'indice](https://github.com/jumpjack/c64_c128_legacy/tree/main/extractor)
 - Indice  Retromagazine World
     - [Lista pagine web](https://jumpjack.github.io/c64_c128_legacy/retro-table-main.html)
-    - Lista articoli (to do)
+    - [Lista articoli](https://jumpjack.github.io/c64_c128_legacy/retro-table-all.html)
 
