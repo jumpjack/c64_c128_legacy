@@ -8,4 +8,5 @@ Riferimenti a varie risorse online
 - Indice  [Retromagazine World](https://www.retromagazine.net/)
     - [Lista pagine web](https://jumpjack.github.io/c64_c128_legacy/retro-table-main.html)
     - [Lista articoli](https://jumpjack.github.io/c64_c128_legacy/retro-table-all.html)
+    - [Downloader interattivo con con tabella riordinabile](https://jumpjack.github.io/c64_c128_legacy/extractor-retro/popup.html)
 
