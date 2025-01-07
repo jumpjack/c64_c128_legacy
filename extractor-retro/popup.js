@@ -68,8 +68,11 @@ document.getElementById('save-table').addEventListener('click', function () {
       <table>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Link</th>
+    <th>#</th>
+    <th>Name</th>
+    <th>Platform</th>
+    <th>Issue number</th>
+    <th>Issue Date</th>            
           </tr>
         </thead>
         <tbody>
