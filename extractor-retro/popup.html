@@ -14,10 +14,18 @@
     <label for="end-number">Numero finale:</label>
     <input type="number" id="end-number" required />
     <button type="submit">Scarica</button>
-  <button id="process-button">Elabora</button>
-  <button id="save-json">Salva JSON</button>
-  <button id="save-table">Salva Tabella</button>
+    <button id="process-button">Elabora</button>
+    <button id="save-json">Salva JSON</button>
+    <button id="save-table">Salva Tabella</button>
   </form>
+<div id="progress-container" style="display: none; margin: 20px 0;">
+  <div style="margin-bottom: 10px;">
+    <span id="progress-text">Elaborazione pagine: 0/0</span>
+  </div>
+  <div style="width: 100%; background-color: #f0f0f0; border-radius: 4px; overflow: hidden;">
+    <div id="progress-bar" style="width: 0%; height: 20px; background-color: #4CAF50; transition: width 0.3s;"></div>
+  </div>
+</div>
   
   <div id="results">
     <h2>Risultati</h2>

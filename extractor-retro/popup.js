@@ -5,11 +5,11 @@ document.getElementById('download-form').addEventListener('submit', async functi
   const endNumber = parseInt(document.getElementById('end-number').value);
   const proxyURL = "http://win98.altervista.org/space/exploration/myp.php?pass=miapass&mode=native&url=";
   const resultsTable = document.querySelector('#links-table tbody');
-  const jsonOutput = document.getElementById('json-output');
+  //const jsonOutput = document.getElementById('json-output');
   let linksArray = [];
 
   resultsTable.innerHTML = ''; // Pulisce la tabella
-  jsonOutput.innerHTML = '';   // Pulisce il JSON
+  //jsonOutput.innerHTML = '';   // Pulisce il JSON
 
   for (let i = startNumber; i <= endNumber; i++) {
     const dataURL = `https://www.retromagazine.net/category/retromagazine-world/numeri-in-italiano/page/${i}`;
@@ -33,7 +33,7 @@ document.getElementById('download-form').addEventListener('submit', async functi
   }
 
   // Mostra il JSON finale
-  jsonOutput.textContent = JSON.stringify(linksArray, null, 2);
+ // jsonOutput.textContent = JSON.stringify(linksArray, null, 2);
 });
 
 // Funzione per salvare l'array come file .js
@@ -106,31 +106,46 @@ function getMonthNumber(monthName) {
 function extractIssueInfo(url) {
   let issue, month, year;  
   // Estrai il numero della rivista
+    // https://www.retromagazine.net/retromagazine-world-n-30-giugno-2021/  // da 30 in poi
+    // https://www.retromagazine.net/retromagazine-world-n29-aprile-2021/   // da 23 a 29
+    // https://www.retromagazine.net/retromagazine-n22-aprile-2020/         // da 5 a 22   
   let match = url.match(/retromagazine-world-n-(\d+)/);
   if (match) {
     issue = match[1];
-    // Per il formato world, cerca mese e anno dopo l'ultimo trattino
+    // Formato 1
+    // https://www.retromagazine.net/retromagazine-world-n-30-giugno-2021/ 
     const dateMatch = url.match(/n-\d+-([\w]+)-(\d{4})/);
     if (dateMatch) {
       month = getMonthNumber(dateMatch[1]);
       year = dateMatch[2];
     }
   } else {
-    // Prova il formato vecchio
-    match = url.match(/retromagazine-n(\d+)-([\w]+)-(\d{4})/);
+    // Formato 2
+    // https://www.retromagazine.net/retromagazine-world-n29-aprile-2021/ 
+    match = url.match(/retromagazine-world-n(\d+)-([\w]+)-(\d{4})/);
     if (match) {
       issue = match[1];
       month = getMonthNumber(match[2]);
       year = match[3];
     } else {
-      // https://www.retromagazine.net/retromagazine-4/
-      match = url.match(/retromagazine-(\d+)/);
+        // Formato 3
+      // https://www.retromagazine.net/retromagazine-n22-aprile-2020/ 
+      match = url.match(/retromagazine-n(\d+)-([\w-]+)-(\d{4})/);
       if (match) {
         issue = match[1];
-        month = 0;
-        year = 0;
+        month = getMonthNumber(match[2]);
+        year = match[3];
       } else {
-      // ???
+        // Formato 4
+       // https://www.retromagazine.net/retromagazine-4/
+        match = url.match(/retromagazine-(\d+)/);
+        if (match) {
+          issue = match[1];
+          month = 0;
+          year = 0;
+        } else {
+        // ???
+        } 
       } 
     }
   }
@@ -201,17 +216,35 @@ console.log("targetList=",targetList)    ;
 // Main function to process all pages
 async function processAllPages() {
   console.log("all");
+  const progressContainer = document.getElementById('progress-container');
+  const progressBar = document.getElementById('progress-bar');
+  const progressText = document.getElementById('progress-text');
+
+      
   const tbody = document.querySelector('#links-table tbody');
   const rows = tbody.querySelectorAll('tr');
   const links = Array.from(rows).map(row => {
     const link = row.querySelector('td:nth-child(2) a');
     return link ? link.href : '';
   }).filter(link => link);
+
+  // Mostra la barra di progresso
+  progressContainer.style.display = 'block';
+  progressText.textContent = `Elaborazione pagine: 0/${links.length}`;
+  progressBar.style.width = '0%';
+
   
   const allResults = [];
-  for (const link of links) {
+  for (let i = 0; i < links.length; i++) {
+    const link = links[i];
     const pageResults = await processPage(link);
     allResults.push(...pageResults);
+    
+   // Aggiorna la barra di progresso
+    const progress = ((i + 1) / links.length) * 100;
+    progressBar.style.width = `${progress}%`;
+    progressText.textContent = `Elaborazione pagine: ${i + 1}/${links.length}`;
+        
   }
   console.log("allResults",allResults);
   
@@ -248,6 +281,12 @@ async function processAllPages() {
   document.querySelectorAll('#links-table th').forEach((header, index) => {
     header.addEventListener('click', () => sortTable(index));
   });
+  
+  // Nascondi la barra di progresso al completamento
+  setTimeout(() => {
+    progressContainer.style.display = 'none';
+  }, 1000);
+    
 }
 
 // Funzione per l'ordinamento della tabella
