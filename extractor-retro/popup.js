@@ -3,7 +3,7 @@ document.getElementById('download-form').addEventListener('submit', async functi
 
   const startNumber = parseInt(document.getElementById('start-number').value);
   const endNumber = parseInt(document.getElementById('end-number').value);
-  const proxyURL = "http://win98.altervista.org/space/exploration/myp.php?pass=miapass&mode=native&url=";
+  const proxyURL = "https://win98.altervista.org/space/exploration/myp.php?pass=miapass&mode=native&url=";
   const resultsTable = document.querySelector('#links-table tbody');
   //const jsonOutput = document.getElementById('json-output');
   let linksArray = [];
