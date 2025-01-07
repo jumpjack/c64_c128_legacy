@@ -160,7 +160,7 @@ function extractIssueInfo(url) {
 // Function to process a single page and extract data
 async function processPage(url) {
 console.log("Page:", url);
-  const proxyURL = "http://win98.altervista.org/space/exploration/myp.php?pass=miapass&mode=native&url=";
+  const proxyURL = "https://win98.altervista.org/space/exploration/myp.php?pass=miapass&mode=native&url=";
   try {
     const response = await fetch(proxyURL + encodeURIComponent(url));
     const html = await response.text();
