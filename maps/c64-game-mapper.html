@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Pasting Tool</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: auto;
+            height: 100vh;
+            width: 100vw;
+        }
+        canvas {
+            border: 1px solid black;
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+        #videoContainer {
+            margin-bottom: 20px;
+        }
+        #controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="videoContainer">
+            <input type="file" id="videoInput" accept="video/mp4,video/webm,video/ogg">
+            <video id="localVideo"  controls style="display:none;"></video>
+            <button id="copyFrame" style="display:none;">Copy Frame</button>
+        </div>
+        <div id="controls">
+            <label>X: <input type="number" id="cropX" value="77" min="0"></label>
+            <label>Y: <input type="number" id="cropY" value="71" min="0"></label>
+            <label>X2: <input type="number" id="cropX2" value="562" min="1"></label>
+            <label>Y2: <input type="number" id="cropY2" value="335" min="1"></label>
+        </div>
+        <canvas id="gameCanvas" width="6400" height="4000"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        const videoInput = document.getElementById('videoInput');
+        const localVideo = document.getElementById('localVideo');
+        const copyFrameButton = document.getElementById('copyFrame');
+        const cropXInput = document.getElementById('cropX');
+        const cropYInput = document.getElementById('cropY');
+        const cropX2Input = document.getElementById('cropX2');
+        const cropY2Input = document.getElementById('cropY2');
+        const cropWidth = parseInt(cropX2Input.value) - parseInt(cropXInput.value);
+        const cropHeight = parseInt(cropY2Input.value) - parseInt(cropYInput.value);
+
+        let pasteX = Math.floor((canvasWidth - cropWidth) / 2 / cropWidth) - 3 * cropWidth;
+        let pasteY = Math.floor((canvasHeight - cropHeight) / 2 / cropHeight);
+
+        videoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                localVideo.src = url;
+                localVideo.style.display = 'block';
+                copyFrameButton.style.display = 'inline-block';
+            }
+        });
+        
+let previousRect = null;
+
+document.addEventListener('keydown', (e) => {
+    // Calcola le coordinate e le dimensioni del rettangolo
+    const rectX = pasteX * cropWidth;
+    const rectY = pasteY * cropHeight;
+    const rectWidth = cropWidth;
+    const rectHeight = cropHeight;
+
+    // Se esiste un'immagine o un altro contenuto, non cancellarlo
+    // Ridisegnare l'immagine o altro contenuto qui prima di disegnare il rettangolo
+
+    // Gestisci i movimenti delle frecce per spostare il rettangolo
+    switch (e.key) {
+        case 'd':
+            pasteX++;
+            break;
+        case 'a':
+            pasteX--;
+            break;
+        case 's':
+            pasteY++;
+            break;
+        case 'w':
+            pasteY--;
+            break;
+    }
+
+    // Limita le coordinate per evitare di uscire dal canvas
+    pasteX = Math.max(0, pasteX);
+    pasteY = Math.max(0, pasteY);
+
+    // Se esiste un rettangolo precedente, ridisegnalo (senza cancellare l'immagine sottostante)
+    if (previousRect) {
+        ctx.strokeStyle = 'blue'; // Colore per il rettangolo precedente
+        ctx.lineWidth = 2;
+        ctx.strokeRect(previousRect.x, previousRect.y, previousRect.width, previousRect.height);
+    }
+
+    // Memorizza le informazioni del rettangolo corrente
+    previousRect = { x: rectX, y: rectY, width: rectWidth, height: rectHeight };
+
+    // Disegna il nuovo rettangolo sopra l'immagine
+    console.log(pasteX, pasteY, rectX, rectY);
+    ctx.strokeStyle = 'red';  // Colore per il nuovo rettangolo
+    ctx.lineWidth = 2;
+    ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);            
+});
+
+document.addEventListener('paste', (e) => {
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].type.startsWith('image')) {
+            const file = items[i].getAsFile();
+            const img = new Image();
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                img.onload = () => {
+                    const cropX = parseInt(cropXInput.value);
+                    const cropY = parseInt(cropYInput.value);
+                    //const cropWidth = cropWidth;
+                    //const cropHeight = cropHeight;
+
+                    const x = pasteX * cropWidth;
+                    const y = pasteY * cropHeight;
+
+                    // Log per il debug
+                    console.log("Incollo ", cropX, cropY, cropWidth + "x" + cropHeight + " in " + x + "," + y);
+
+                    // Disegna l'immagine nel canvas
+                    ctx.drawImage(img, 0,0, cropWidth, cropHeight, x,y, cropWidth, cropHeight);
+
+                };
+                img.src = event.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
+});
+
+
+        copyFrameButton.addEventListener('click', () => {
+            const cropX = parseInt(cropXInput.value);
+            const cropY = parseInt(cropYInput.value);
+            //const cropWidth = cropWidth;
+            //const cropHeight = cropHeight;
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = cropWidth;
+            tempCanvas.height = cropHeight;
+            tempCtx.drawImage(localVideo, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+            tempCanvas.toBlob((blob) => {
+                const item = new ClipboardItem({ 'image/png': blob });
+                navigator.clipboard.write([item]).then(() => {
+                   // alert('Frame copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy frame:', err);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
