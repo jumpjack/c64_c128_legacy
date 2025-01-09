@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Crop and Paste</title>
+    <style>
+        .canvas-container {
+            width: 1024px;
+            height: 768px;
+            overflow: auto;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        .canvas-wrapper {
+            transform-origin: top left;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+        #controls {
+            margin-bottom: 10px;
+        }
+        .scale-container {
+            overflow: visible;
+            position: relative;
+        }
+        #zoomControls {
+            margin-bottom: 10px;
+        }
+        #zoomValue {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+    <table>
+    <tr>
+    <td><input type="file" id="videoInput" accept="video/*"><br>
+    Mappa base:  <input type="file" id="imageInput" accept="image/*"></td>
+    <button id="saveButton">Salva mappa e storico</button>
+<button id="loadButton">Carica mappa e storico</button>
+        <td>
+            <video id="video" style="display: none;" controls width=320></video>
+        </td>
+        <td>
+        <span>x1: <input type="number" id="x1" value="77"></span><br>
+        <span>y1: <input type="number" id="y1" value="77"></span><br>
+        <span>x2: <input type="number" id="x2" value="560"></span><br>
+        <span>y2: <input type="number" id="y2" value="335"></span><br>
+        <button id="setupButton">Setup</button>
+        </td>
+        </tr>
+        </table>
+    </div>
+    <span>Current position: (<span id="positionDisplay">0, 0</span>)</span>
+    <div id="zoomControls">
+        <button id="zoomOut">-</button>
+        <span id="zoomValue">100%</span>
+        <button id="zoomIn">+</button>
+        <input type="range" id="zoomSlider" min="10" max="100" value="20" step="5">
+    </div>
+    <div class="canvas-container" tabindex = "0">
+        <div class="scale-container">
+            <div class="canvas-wrapper">
+                <canvas id="canvas" width="800" height="600"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const video = document.getElementById('video');
+        const videoInput = document.getElementById('videoInput');
+        const x1Input = document.getElementById('x1');
+        const y1Input = document.getElementById('y1');
+        const x2Input = document.getElementById('x2');
+        const y2Input = document.getElementById('y2');
+        const positionDisplay = document.getElementById('positionDisplay');
+        const zoomSlider = document.getElementById('zoomSlider');
+        const zoomValue = document.getElementById('zoomValue');
+        const zoomIn = document.getElementById('zoomIn');
+        const zoomOut = document.getElementById('zoomOut');
+        const canvasWrapper = document.querySelector('.canvas-wrapper');
+        const scaleContainer = document.querySelector('.scale-container');
+        let pasteHistory = {};
+        //pasteHistory[time] = { x: 0,  y: 0 };
+
+        // Funzione per aggiornare lo zoom
+        function updateZoom(value) {
+            const scale = value / 100;
+            canvasWrapper.style.transform = `scale(${scale})`;
+            scaleContainer.style.width = `${value}%`;
+            scaleContainer.style.height = `${value}%`;
+            zoomValue.textContent = `${value}%`;
+            zoomSlider.value = value;
+        }
+
+        // Event listeners per i controlli dello zoom
+        zoomSlider.addEventListener('input', (e) => {
+            updateZoom(Number(e.target.value));
+        });
+
+        zoomIn.addEventListener('click', () => {
+            const newValue = Math.min(100, Number(zoomSlider.value) + 5);
+            updateZoom(newValue);
+        });
+
+        zoomOut.addEventListener('click', () => {
+            const newValue = Math.max(10, Number(zoomSlider.value) - 5);
+            updateZoom(newValue);
+        });
+
+        // Imposta lo zoom iniziale
+        updateZoom(20);
+
+        let pasteX = 4, pasteY = 4, pasteXprev = 4, pasteYprev = 4;
+        let cropWidth = 0, cropHeight = 0;
+        let offsetX = 0, offsetY = 0;
+
+        videoInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                video.src = url;
+                video.style.display = 'block';
+                video.onloadeddata = () => {
+                    //video.play();
+                };
+            }
+        });
+
+        document.getElementById('setupButton').addEventListener('click', () => {
+            const x1 = parseInt(x1Input.value);
+            const y1 = parseInt(y1Input.value);
+            const x2 = parseInt(x2Input.value);
+            const y2 = parseInt(y2Input.value);
+
+            cropWidth = x2 - x1;
+            cropHeight = y2 - y1;
+            canvas.width = cropWidth * 10;
+            canvas.height = cropHeight * 10;
+
+if (pasteHistory[`${pasteX},${pasteY}`]) {
+    positionDisplay.textContent = `${pasteX}, ${pasteY} - time: ${pasteHistory[`${pasteX},${pasteY}`].time}`;
+} else {
+    positionDisplay.textContent = `${pasteX}, ${pasteY} - time: N/A`;
+}
+
+            storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            drawOutline();
+            drawGrid();
+        });
+
+
+        document.addEventListener('copy', () => {
+            const x1 = parseInt(x1Input.value);
+            const y1 = parseInt(y1Input.value);
+            const x2 = parseInt(x2Input.value);
+            const y2 = parseInt(y2Input.value);
+
+            const width = x2 - x1;
+            const height = y2 - y1;
+
+            const frame = document.createElement('canvas');
+            frame.width = width;
+            frame.height = height;
+            frame.getContext('2d').drawImage(video, x1, y1, width, height, 0, 0, width, height);
+            frame.toBlob(blob => navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]));
+        });
+
+        document.addEventListener('keydown', (event) => {
+            let needsRedraw = true;
+
+            switch (event.key) {
+                case 'd':
+                    pasteXprev = pasteX;
+                    pasteYprev = pasteY;
+                    pasteX++;
+                    break;
+                case 'a':
+                    pasteXprev = pasteX;
+                    pasteYprev = pasteY;
+                    pasteX--;
+                    break;
+                case 's':
+                    pasteXprev = pasteX;
+                    pasteYprev = pasteY;
+                    pasteY++;
+                    break;
+                case 'w':
+                    pasteXprev = pasteX;
+                    pasteYprev = pasteY;
+                    pasteY--;
+                    break;
+                case 'i': {
+                    // Memorizza l'intero canvas
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    // Pulisci tutto
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    // Ridisegna traslato verso l'alto
+                    offsetY -= cropHeight;
+                    ctx.putImageData(imageData, 0, offsetY);
+                    break;
+                }
+                case 'k': {
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    offsetY += cropHeight;
+                    ctx.putImageData(imageData, 0, offsetY);
+                    break;
+                }
+                case 'j': {
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    offsetX -= cropWidth;
+                    ctx.putImageData(imageData, offsetX, 0);
+                    break;
+                }
+                case 'l': {
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    offsetX += cropWidth;
+                    ctx.putImageData(imageData, offsetX, 0);
+                    break;
+                }
+                case '-': {
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    canvas.width -= cropWidth;
+                    canvas.height -= cropHeight;
+                    ctx.putImageData(imageData, 0, 0);
+                    break;
+                }
+                case '+': {
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    canvas.width += cropWidth;
+                    canvas.height += cropHeight;
+                    ctx.putImageData(imageData, 0, 0);
+                    break;
+                }
+                case 'Delete':
+                    ctx.clearRect(pasteX * cropWidth  + offsetX, pasteY * cropHeight  + offsetY, cropWidth, cropHeight);
+                    needsRedraw = false;
+                    break;
+                default:
+                    needsRedraw = false;
+            }
+
+            if (needsRedraw) {
+if (pasteHistory[`${pasteX},${pasteY}`]) {
+    positionDisplay.textContent = `${pasteX}, ${pasteY} - time: ${pasteHistory[`${pasteX},${pasteY}`].time}`;
+} else {
+    positionDisplay.textContent = `${pasteX}, ${pasteY} - time: N/A`;
+}
+                drawOutline();
+            }
+        });
+
+
+        document.addEventListener('paste', async () => {
+            const clipboardItems = await navigator.clipboard.read();
+            for (const item of clipboardItems) {
+                if (item.types.includes('image/png')) {
+                    const blob = await item.getType('image/png');
+                    const img = new Image();
+                    img.onload = () => {
+                        ctx.drawImage(img, pasteX * cropWidth + offsetX, pasteY * cropHeight + offsetY);
+                        storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+  // Crea una chiave combinando pasteX e pasteY
+  const key = `${pasteX},${pasteY}`;
+
+  // Aggiungi il timecount e le coordinate nell'oggetto
+  pasteHistory[key] = {    time: video.currentTime  };
+
+                    };
+                    img.src = URL.createObjectURL(blob);
+                }
+            }
+            // Imposta il focus sul div con la classe "canvas-container"
+            const canvasContainer = document.querySelector('.canvas-container');
+            canvasContainer.setAttribute('tabindex', '0'); // Rende il div focalizzabile
+            canvasContainer.focus({ preventScroll: true }); // Imposta il focus sul div
+
+            // Aggiungi il listener per il cambio di focus sui tasti cursore
+            canvasContainer.addEventListener('keydown', (event) => {
+                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', " "].includes(event.key)) {
+                    // Imposta il focus sul video
+                    video.focus();
+                }
+            });
+        });
+/*
+
+        function drawOutlineOld() {
+            const borderThickness = 10; // Spessore del bordo
+
+            // Ridisegna il bordo precedente con il colore del contenuto circostante (nero in questo caso)
+            ctx.strokeStyle = 'white'; // Colore del bordo del canvas
+            ctx.lineWidth = borderThickness;
+            ctx.strokeRect(
+                pasteXprev * cropWidth + offsetX,
+                pasteYprev * cropHeight + offsetY,
+                cropWidth,
+                cropHeight
+            );
+
+            // Disegna il nuovo rettangolo in rosso
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = borderThickness;
+            ctx.strokeRect(
+                pasteX * cropWidth + offsetX,
+                pasteY * cropHeight + offsetY,
+                cropWidth,
+                cropHeight
+            );
+        }
+*/
+
+        function drawOutline() {
+            const borderThickness = 10; // Spessore del bordo
+            ctx.putImageData(storedMap, 0, 0);
+            // Disegna il nuovo rettangolo in rosso
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = borderThickness;
+            ctx.strokeRect(
+                pasteX * cropWidth + offsetX + 10,
+                pasteY * cropHeight + offsetY + 10,
+                cropWidth - 20,
+                cropHeight -20
+            );
+        }
+
+
+        function drawGrid() {
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgb(0, 0, 0)'; // Colore della griglia (trasparente)
+            ctx.lineWidth = 8;
+
+            // Disegna le linee verticali
+            for (let x = 0; x <= canvas.width; x += cropWidth) {
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+            }
+
+            // Disegna le linee orizzontali
+            for (let y = 0; y <= canvas.height; y += cropHeight) {
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+            }
+
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+        const imageInput = document.getElementById('imageInput');
+const saveButton = document.getElementById('saveButton');
+const loadButton = document.getElementById('loadButton');
+
+        imageInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                // Chiedi conferma all'utente
+                const confirmLoad = window.confirm('Sei sicuro di voler caricare questa immagine nel canvas?');
+
+                if (confirmLoad) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            // Imposta il canvas con le dimensioni dell'immagine
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+
+                            // Disegna l'immagine nel canvas
+                            ctx.clearRect(0, 0, canvas.width, canvas.height); // Pulisci il canvas
+                            ctx.drawImage(img, 0, 0); // Disegna l'immagine
+                            storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                            drawOutline();
+                        };
+                        img.src = e.target.result; // Imposta l'immagine dalla lettura del file
+                    };
+                    reader.readAsDataURL(file); // Legge il file come URL di dati
+                } else {
+                    // Se l'utente annulla, ripristina il file input (opzionale)
+                    imageInput.value = '';
+                }
+            }
+        });
+
+// Funzione per salvare la mappa e la cronologia in un file
+function saveMapAndHistory() {
+    // Salva la mappa come immagine Base64
+    const canvasImage = canvas.toDataURL();
+
+    // Salva la cronologia in un file JSON
+    const historyBlob = new Blob([JSON.stringify(pasteHistory, null, 2)], { type: 'application/json' });
+    const historyLink = document.createElement('a');
+    historyLink.href = URL.createObjectURL(historyBlob);
+    historyLink.download = 'pasteHistory.json'; // Nome del file per la cronologia
+    historyLink.click();
+
+    // Salva la mappa come file immagine PNG
+    const canvasBlob = dataURItoBlob(canvasImage);
+    const imageLink = document.createElement('a');
+    imageLink.href = URL.createObjectURL(canvasBlob);
+    imageLink.download = 'baseMap.png'; // Nome del file per l'immagine
+    imageLink.click();
+
+    alert('Mappa e storico salvati!');
+}
+
+// Funzione per caricare la mappa e la cronologia dal disco
+function loadMapAndHistory() {
+    // Carica la mappa base
+    const imageFileInput = document.createElement('input');
+    imageFileInput.type = 'file';
+    imageFileInput.accept = 'image/*';
+    imageFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                    storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    drawOutline();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    imageFileInput.click();
+
+    // Carica la cronologia da file JSON
+    const historyFileInput = document.createElement('input');
+    historyFileInput.type = 'file';
+    historyFileInput.accept = 'application/json';
+    historyFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    pasteHistory = JSON.parse(e.target.result);
+                    alert('Storico caricato con successo!');
+                } catch (err) {
+                    alert('Errore nel caricare la cronologia.');
+                }
+            };
+            reader.readAsText(file);
+        }
+    });
+    historyFileInput.click();
+}
+
+// Funzione per convertire un Data URL in un Blob
+function dataURItoBlob(dataURI) {
+    const byteString = atob(dataURI.split(',')[1]);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const uintArray = new Uint8Array(arrayBuffer);
+    for (let i = 0; i < byteString.length; i++) {
+        uintArray[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([uintArray], { type: 'image/png' });
+}
+
+// Aggiungi event listener per il salvataggio e il caricamento
+saveButton.addEventListener('click', saveMapAndHistory);
+loadButton.addEventListener('click', loadMapAndHistory);
+
+
+    </script>
+</body>
+</html>
