@@ -24,4 +24,18 @@ Il programma è composto di 3 parti (più avanti  i link alle versioni scaricabi
 
   <img width="435" alt="image" src="https://github.com/user-attachments/assets/30895461-03a2-41a2-9ec2-af1ab7048295" />
 
-  
+  Naturalmente, essendo passati un po' di annetti dal dicembre 1989, i listati risentono un po' dell'età: nonostante la
+  scansione ad alta risoluzione, e la disponibilità della rivista sia in formato [jpg](https://ready64.org/ccc/pagina.php?ccc=70&pag=039.jpg) che in formato [pdf](https://archive.org/details/Commodore-Computer-Club-70/page/n43/mode/2up?q=videata) , la "delicatezza" del listato rende estremamente difficile utilizzarlo oggi: infatti, i caretteri  B e 8 si somigliano moltissimo, come anche D e 0 e i caratteri 1 e l, quindi un OCR non è in grado di trascrivere correttamente tutti i codici, col risultato che il  programma non funzionerà.
+
+  E' stato quindi necessario andare a esaminare in dettaglio anche il disassemblato commentato e confrontarlo col risultato del caricamento in memoria dei numeri estratti tramite OCR, per riuscire a risalire al listato originale.
+
+  Ma non è stato comunque sufficiente: sia nei numeri delle linee DATA che nel disassemblato ci sono infatti degli errori!
+
+
+
+# Disassemblato originale
+
+![image](https://github.com/user-attachments/assets/1503cf69-0717-4c23-bd01-34efaa7d9102)
+
+
+
