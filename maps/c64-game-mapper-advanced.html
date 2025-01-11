@@ -34,11 +34,12 @@
     </style>
 </head>
 <body>
+<h1>Creatore di mappe per giochi platform</h1>
     <div id="controls">
     <table>
     <tr>
-    <td><input type="file" id="videoInput" accept="video/*"><br>
-    Mappa base:  <input type="file" id="imageInput" accept="image/*"></td>
+    <td>Video:<input type="file" id="videoInput" accept="video/*"><br>
+    </td>
     <button id="saveButton">Salva mappa e storico</button>
 <button id="loadButton">Carica mappa e storico</button>
         <td>
@@ -60,6 +61,9 @@
         <span id="zoomValue">100%</span>
         <button id="zoomIn">+</button>
         <input type="range" id="zoomSlider" min="10" max="100" value="20" step="5">
+    </div>
+    <div>
+    WASD = sposta casella; IJKL: sposta mappa; +/-: ridimensiona mappa; sin/des: riavvolgi/avanza 1 sec; CTRL+C/CTRL+V: copia/incolla frame
     </div>
     <div class="canvas-container" tabindex = "0">
         <div class="scale-container">
@@ -86,7 +90,10 @@
         const canvasWrapper = document.querySelector('.canvas-wrapper');
         const scaleContainer = document.querySelector('.scale-container');
         let pasteHistory = {};
-        //pasteHistory[time] = { x: 0,  y: 0 };
+        x1Val=0;
+        x2Val=0;
+        y1Val=0;
+        y2Val=0;
 
         // Funzione per aggiornare lo zoom
         function updateZoom(value) {
@@ -133,97 +140,110 @@
         });
 
         document.getElementById('setupButton').addEventListener('click', () => {
-            const x1 = parseInt(x1Input.value);
-            const y1 = parseInt(y1Input.value);
-            const x2 = parseInt(x2Input.value);
-            const y2 = parseInt(y2Input.value);
+            x1Val = parseInt(x1Input.value);
+            y1Val = parseInt(y1Input.value);
+            x2Val = parseInt(x2Input.value);
+            y2Val = parseInt(y2Input.value);
+            setupData();
 
-            cropWidth = x2 - x1;
-            cropHeight = y2 - y1;
-            canvas.width = cropWidth * 10;
-            canvas.height = cropHeight * 10;
-
-if (pasteHistory[`${pasteX},${pasteY}`]) {
-    positionDisplay.textContent = `${pasteX}, ${pasteY} - time: ${pasteHistory[`${pasteX},${pasteY}`].time}`;
-} else {
-    positionDisplay.textContent = `${pasteX}, ${pasteY} - time: N/A`;
-}
-
-            storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            drawOutline();
-            drawGrid();
         });
 
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+            const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+            const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        }
 
-        document.addEventListener('copy', () => {
-            const x1 = parseInt(x1Input.value);
-            const y1 = parseInt(y1Input.value);
-            const x2 = parseInt(x2Input.value);
-            const y2 = parseInt(y2Input.value);
 
-            const width = x2 - x1;
-            const height = y2 - y1;
+        function setupData()   {
+        console.log(window.x1Val,x2Val, y1Val, y2Val,cropWidth,cropHeight)
+              cropWidth = window.x2Val - window.x1Val;
+              cropHeight = window.y2Val - window.y1Val;
+              canvas.width = cropWidth * 10;
+              canvas.height = cropHeight * 10;
+              if (pasteHistory[`${pasteX},${pasteY}`]) {
+        positionDisplay.textContent = `${pasteX}, ${pasteY} - time: ${formatTime(pasteHistory[`${pasteX},${pasteY}`].time)}`;
+              } else {
+                  positionDisplay.textContent = `${pasteX}, ${pasteY} - time: N/A`;
+              }
 
-            const frame = document.createElement('canvas');
-            frame.width = width;
-            frame.height = height;
-            frame.getContext('2d').drawImage(video, x1, y1, width, height, 0, 0, width, height);
-            frame.toBlob(blob => navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]));
-        });
+              storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
+              drawOutline();
+              drawGrid();
 
-        document.addEventListener('keydown', (event) => {
+        }
+
+                 
+
+        document.addEventListener('copy', copyData);
+
+        document.addEventListener('keydown', async (event) => {
             let needsRedraw = true;
 
             switch (event.key) {
                 case 'd':
+                case 'D':
                     pasteXprev = pasteX;
                     pasteYprev = pasteY;
                     pasteX++;
                     break;
                 case 'a':
+                case 'A':
                     pasteXprev = pasteX;
                     pasteYprev = pasteY;
                     pasteX--;
                     break;
                 case 's':
+                case 'S':
                     pasteXprev = pasteX;
                     pasteYprev = pasteY;
                     pasteY++;
                     break;
                 case 'w':
+                case 'W':
                     pasteXprev = pasteX;
                     pasteYprev = pasteY;
                     pasteY--;
                     break;
-                case 'i': {
-                    // Memorizza l'intero canvas
+                case 'i': 
+                case 'I': {                
                     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    // Pulisci tutto
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    // Ridisegna traslato verso l'alto
                     offsetY -= cropHeight;
-                    ctx.putImageData(imageData, 0, offsetY);
+                    ctx.putImageData(imageData, 0, -cropHeight);
+                    storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    //needsRedraw = false;
                     break;
                 }
-                case 'k': {
+                case 'k': 
+                case 'K': {
                     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     offsetY += cropHeight;
-                    ctx.putImageData(imageData, 0, offsetY);
+                    ctx.putImageData(imageData, 0, cropHeight);
+                    storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    //needsRedraw = false;
                     break;
                 }
-                case 'j': {
+                case 'j': 
+                case 'J': {
                     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     offsetX -= cropWidth;
-                    ctx.putImageData(imageData, offsetX, 0);
+                    ctx.putImageData(imageData, -cropWidth, 0);
+                    storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    //needsRedraw = false;
                     break;
                 }
-                case 'l': {
+                case 'l': 
+                case 'L': {
                     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     offsetX += cropWidth;
-                    ctx.putImageData(imageData, offsetX, 0);
+                    ctx.putImageData(imageData, cropWidth, 0);
+                    storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    //needsRedraw = false;
                     break;
                 }
                 case '-': {
@@ -244,82 +264,98 @@ if (pasteHistory[`${pasteX},${pasteY}`]) {
                 }
                 case 'Delete':
                     ctx.clearRect(pasteX * cropWidth  + offsetX, pasteY * cropHeight  + offsetY, cropWidth, cropHeight);
+                    storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
                     needsRedraw = false;
                     break;
-                default:
+                case 'ArrowRight':
+                    // Avanza di un secondo
+                    event.preventDefault(); 
+                    video.currentTime += 1;
+                    break;
+                case 'ArrowLeft':
+                    // Arretra di un secondo
+                    event.preventDefault(); 
+                    video.currentTime -= 1;
+                    break;
+                case ' ':
+                    event.preventDefault(); 
+                   // Ferma o fa ripartire il video
+                    if (video.paused) {
+                        video.play();
+                    } else {
+                        video.pause();
+                    }
+                    break;
+               default:
                     needsRedraw = false;
             }
 
             if (needsRedraw) {
-if (pasteHistory[`${pasteX},${pasteY}`]) {
-    positionDisplay.textContent = `${pasteX}, ${pasteY} - time: ${pasteHistory[`${pasteX},${pasteY}`].time}`;
-} else {
-    positionDisplay.textContent = `${pasteX}, ${pasteY} - time: N/A`;
-}
+                if (pasteHistory[`${pasteX},${pasteY}`]) {
+                    positionDisplay.textContent = `${pasteX}, ${pasteY} - time: ${formatTime(pasteHistory[`${pasteX},${pasteY}`].time)}`;
+               } else {
+                    positionDisplay.textContent = `${pasteX}, ${pasteY} - time: N/A`;
+                }
                 drawOutline();
+                drawGrid();
             }
         });
 
 
-        document.addEventListener('paste', async () => {
-            const clipboardItems = await navigator.clipboard.read();
+        document.addEventListener('paste', handlePaste);
+
+        async function copyData() {
+        console.log("Copying...");
+          const x1 = parseInt(x1Input.value);
+          const y1 = parseInt(y1Input.value);
+          const x2 = parseInt(x2Input.value);
+          const y2 = parseInt(y2Input.value);
+
+          const width = x2 - x1;
+          const height = y2 - y1;
+
+          const frame = document.createElement('canvas');
+          frame.width = width;
+          frame.height = height;
+          frame.getContext('2d').drawImage(video, x1, y1, width, height, 0, 0, width, height);
+
+          // Scrive il frame negli appunti
+          frame.toBlob(async (blob) => {
+              await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          }); 
+                        
+        }   
+
+
+
+
+        // Funzione che gestisce l'operazione di incolla
+        async function handlePaste() {
+            const clipboardItems = await navigator.clipboard.read();    
             for (const item of clipboardItems) {
                 if (item.types.includes('image/png')) {
                     const blob = await item.getType('image/png');
                     const img = new Image();
                     img.onload = () => {
-                        ctx.drawImage(img, pasteX * cropWidth + offsetX, pasteY * cropHeight + offsetY);
+                        ctx.drawImage(img, pasteX * cropWidth + offsetX, pasteY * cropHeight + offsetY);                
                         storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-  // Crea una chiave combinando pasteX e pasteY
-  const key = `${pasteX},${pasteY}`;
+                        // Crea una chiave combinando pasteX e pasteY
+                        const key = `${pasteX},${pasteY}`;
 
-  // Aggiungi il timecount e le coordinate nell'oggetto
-  pasteHistory[key] = {    time: video.currentTime  };
-
+                        // Aggiungi il timecount e le coordinate nell'oggetto
+                        pasteHistory[key] = { time: video.currentTime };
                     };
                     img.src = URL.createObjectURL(blob);
                 }
             }
+
             // Imposta il focus sul div con la classe "canvas-container"
             const canvasContainer = document.querySelector('.canvas-container');
             canvasContainer.setAttribute('tabindex', '0'); // Rende il div focalizzabile
             canvasContainer.focus({ preventScroll: true }); // Imposta il focus sul div
-
-            // Aggiungi il listener per il cambio di focus sui tasti cursore
-            canvasContainer.addEventListener('keydown', (event) => {
-                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', " "].includes(event.key)) {
-                    // Imposta il focus sul video
-                    video.focus();
-                }
-            });
-        });
-/*
-
-        function drawOutlineOld() {
-            const borderThickness = 10; // Spessore del bordo
-
-            // Ridisegna il bordo precedente con il colore del contenuto circostante (nero in questo caso)
-            ctx.strokeStyle = 'white'; // Colore del bordo del canvas
-            ctx.lineWidth = borderThickness;
-            ctx.strokeRect(
-                pasteXprev * cropWidth + offsetX,
-                pasteYprev * cropHeight + offsetY,
-                cropWidth,
-                cropHeight
-            );
-
-            // Disegna il nuovo rettangolo in rosso
-            ctx.strokeStyle = 'red';
-            ctx.lineWidth = borderThickness;
-            ctx.strokeRect(
-                pasteX * cropWidth + offsetX,
-                pasteY * cropHeight + offsetY,
-                cropWidth,
-                cropHeight
-            );
         }
-*/
+
 
         function drawOutline() {
             const borderThickness = 10; // Spessore del bordo
@@ -357,11 +393,10 @@ if (pasteHistory[`${pasteX},${pasteY}`]) {
             ctx.closePath();
         }
 
-        const imageInput = document.getElementById('imageInput');
 const saveButton = document.getElementById('saveButton');
 const loadButton = document.getElementById('loadButton');
 
-        imageInput.addEventListener('change', (event) => {
+    /*    imageInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
             if (file) {
                 // Chiedi conferma all'utente
@@ -381,6 +416,7 @@ const loadButton = document.getElementById('loadButton');
                             ctx.drawImage(img, 0, 0); // Disegna l'immagine
                             storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
                             drawOutline();
+                            drawGrid();
                         };
                         img.src = e.target.result; // Imposta l'immagine dalla lettura del file
                     };
@@ -390,19 +426,36 @@ const loadButton = document.getElementById('loadButton');
                     imageInput.value = '';
                 }
             }
-        });
+        });*/
 
-// Funzione per salvare la mappa e la cronologia in un file
+// Funzione per salvare la mappa, la cronologia e i parametri in un file
 function saveMapAndHistory() {
     // Salva la mappa come immagine Base64
     const canvasImage = canvas.toDataURL();
 
-    // Salva la cronologia in un file JSON
-    const historyBlob = new Blob([JSON.stringify(pasteHistory, null, 2)], { type: 'application/json' });
-    const historyLink = document.createElement('a');
-    historyLink.href = URL.createObjectURL(historyBlob);
-    historyLink.download = 'pasteHistory.json'; // Nome del file per la cronologia
-    historyLink.click();
+    // Oggetto contenente cronologia e parametri
+    const data = {
+        pasteHistory,
+        params: {
+            x1Val: parseInt(x1Input.value),
+            y1Val: parseInt(y1Input.value),
+            x2Val: parseInt(x2Input.value),
+            y2Val: parseInt(y2Input.value),
+            pasteX,
+            pasteY,
+            cropWidth,
+            cropHeight,
+            canvasWidth : canvas.width,
+            canvasHeight : canvas.height
+        }
+    };
+
+    // Salva la cronologia e i parametri in un file JSON
+    const dataBlob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const dataLink = document.createElement('a');
+    dataLink.href = URL.createObjectURL(dataBlob);
+    dataLink.download = 'pasteData.json'; // Nome del file per cronologia e parametri
+    dataLink.click();
 
     // Salva la mappa come file immagine PNG
     const canvasBlob = dataURItoBlob(canvasImage);
@@ -411,37 +464,12 @@ function saveMapAndHistory() {
     imageLink.download = 'baseMap.png'; // Nome del file per l'immagine
     imageLink.click();
 
-    alert('Mappa e storico salvati!');
+    alert('Mappa, storico e parametri salvati!');
 }
 
-// Funzione per caricare la mappa e la cronologia dal disco
+// Funzione per caricare la mappa, la cronologia e i parametri dal disco
 function loadMapAndHistory() {
-    // Carica la mappa base
-    const imageFileInput = document.createElement('input');
-    imageFileInput.type = 'file';
-    imageFileInput.accept = 'image/*';
-    imageFileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.drawImage(img, 0, 0);
-                    storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    drawOutline();
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-    imageFileInput.click();
-
-    // Carica la cronologia da file JSON
+    // Carica la cronologia e i parametri da file JSON
     const historyFileInput = document.createElement('input');
     historyFileInput.type = 'file';
     historyFileInput.accept = 'application/json';
@@ -449,18 +477,65 @@ function loadMapAndHistory() {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    pasteHistory = JSON.parse(e.target.result);
-                    alert('Storico caricato con successo!');
-                } catch (err) {
-                    alert('Errore nel caricare la cronologia.');
-                }
+            reader.onload = function (e) {
+                    const data = JSON.parse(e.target.result);
+
+                    // Ripristina la cronologia
+                    pasteHistory = data.pasteHistory;
+console.log(data.params)
+                    // Ripristina i parametri
+                    window.x1Val= -1;
+                    const { x1saved, y1saved, x2saved, y2saved, pasteXsaved, pasteYsaved, cropWidthsaved, cropHeightsaved, canvasWidthsaved, canvasHeightsaved } = data.params;
+                    x1Val = x1saved;
+                    window.y1Val = y1saved;
+                    window.x2Val = x2saved;
+                    window.y2Val = y2saved;
+                    window.pasteX = pasteXsaved;
+                    window.pasteY = pasteYsaved;
+                    //window.cropWidth = cropWidthsaved;
+                    //window.cropHeight = cropHeightsaved;
+ console.log(x1Val,  window.x1Val, x1saved)
+                    setupData();
+                                       
+                    x1Input.value = x1saved;
+                    y1Input.value = y1saved;
+                    x2Input.value = x2saved;
+                    y2Input.value = y2saved;
+
+                    // Carica la mappa base
+                    const imageFileInput = document.createElement('input');
+                    imageFileInput.type = 'file';
+                    imageFileInput.accept = 'image/*';
+                    imageFileInput.addEventListener('change', (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                const img = new Image();
+                                img.onload = function () {
+                                    canvas.width = img.width;
+                                    canvas.height = img.height;
+                                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                    ctx.drawImage(img, 0, 0);
+                                    storedMap = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                                    drawOutline();
+                                    drawGrid();
+                                    alert('Storico e parametri caricati con successo!');                    
+                                };
+                                img.src = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                    imageFileInput.click();
+                        
             };
             reader.readAsText(file);
         }
     });
     historyFileInput.click();
+    
+
 }
 
 // Funzione per convertire un Data URL in un Blob
