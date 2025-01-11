@@ -5,7 +5,7 @@ in realtà una cartuccia hardware collegata al commodore 64, di quelle che si us
 dei giochi in modo da poter accedere alla RAM, modificarla per "barare", o leggerla per salvare immagini e sprite.
 
 Il programma si basa sul fatto che nel C128 ci sono vari banchi di memoria: normalmente quando si passa in modalità
-C64 si usa il banco 0, ma grazie a questo _hacking_ viene utilizzato il banco 1, che al momento del reset del C129
+C64 si usa il banco 0, ma grazie a questo _hacking_ viene utilizzato il banco 1, che al momento del reset del C128
 NON viene cancellato: il risultato è che dopo il reset ci si ritrova in un C128 con ancora in memoria tutti (o quasi)
 i dati dell'applicazione che era in esecuzione nel commodore 64! "O quasi" perchè nel programma sono presenti ulteriori 
 trucchetti ingegnosi per "imbrogliare" la routine di reset ed evitare che comunque sovrascriva una parte dei dati.
