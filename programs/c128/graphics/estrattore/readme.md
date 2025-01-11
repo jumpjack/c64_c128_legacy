@@ -68,6 +68,7 @@ Verifiche in corso...
 <img width="400" alt="image" src="https://github.com/user-attachments/assets/ce8bd009-e0a1-46a4-b8ed-5bdf17dbec33" />
 
 
-
+# Disassemblato ricavato
+- [link](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/disassemblato.txt)
 
 
