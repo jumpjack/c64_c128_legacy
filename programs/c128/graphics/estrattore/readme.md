@@ -10,17 +10,17 @@ NON viene cancellato: il risultato è che dopo il reset ci si ritrova in un C128
 i dati dell'applicazione che era in esecuzione nel commodore 64! "O quasi" perchè nel programma sono presenti ulteriori 
 trucchetti ingegnosi per "imbrogliare" la routine di reset ed evitare che comunque sovrascriva una parte dei dati.
 
-Il programma è composto di 3 parti (più avanti  i link alle versioni scaricabili):
-- parte 1: "estrattore": programma principale, che dirotta la routine di reset in modo da preservare i dati, e li salva su disco.
+Il programma è composto di 3 parti:
+- [parte 1: "estrattore"](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/estrattore.txt): programma principale, che dirotta la routine di reset in modo da preservare i dati, e li salva su disco.
 
 <img width="695" alt="image" src="https://github.com/user-attachments/assets/348e21a6-86ff-40b7-8939-79d440eb0128" />
 
   
-- parte 2: "preloader"? Fa "qualcosa", e poi carica il programma "visualizza"
+-[ parte 2: "preloader"](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/pre.txt)? Fa "qualcosa", e poi carica il programma "visualizza"
 
 ![image](https://github.com/user-attachments/assets/d328979b-1e90-4d29-9434-896598dd926b)
 
-- parte 3: "visualizza": serve ovviamente a visualizzare le immagini, salvate su disco in formato "Koala painter"
+- [parte 3: "visualizza"](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/visualizza.txt): serve ovviamente a visualizzare le immagini, salvate su disco in formato "Koala painter"
 
   <img width="435" alt="image" src="https://github.com/user-attachments/assets/30895461-03a2-41a2-9ec2-af1ab7048295" />
 
