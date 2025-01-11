@@ -1,0 +1,54 @@
+0 rem ** prima di attivare questo     **
+1 rem ** programma bisogna caricare e **
+2 rem ** lanciare il prg :caricatore  **
+3 :
+4 rem ** questo programma deve essere **
+5 rem ** registrato con il nome.......**
+6 rem ** save "visualizza", 8         **
+7 rem ** (vedi,infatti ,"caricatore") **
+8 :
+10 scnclr
+20 color0,1:color4,1:color5,4:gosub 130
+25 break
+40 char1,16,12,"attendi..."
+60 for t=0 to 8 : rem leggi articolo
+70 a$="?pic "+chr$(65+t)+ "*"
+80 bload(a$),p8192
+90 sys 3072 :slow
+100 j=0
+105 get a$:if a$=""then106:else goto 110
+106 j=j+1 :if j<400then 105
+110 fast:next t
+120 color0,1 :slow:graphicclr:end
+130 lc=3072 :k=0
+140 do :read a$ : ifa$="*"then exit
+145 print lc+k, a$
+160 poke lc+k,dec(a$) :k=k+1
+170 loop 
+
+180 return
+1000 data a9,00,8d,00,ff,8d,20,d0 
+1010 data a9,93,20,d2,ff,20,b3,77 
+1020 data a2,3f,8e,00,ff,a0,00,b9 
+1030 data f8,1f,99,f8,07,c8,c0,08 
+1040 data d0,f5,a9,40,85,fa,a9,3f 
+1050 data 85,fb,a9,00,85,fc,a9,1c 
+1060 data 85,fd,a2,00,a0,00,b1,fa 
+1070 data 91,fc,c8,d0,f9,e8,e6,fb 
+1080 data e6,fd,e0,04,d0,ee,a9,28 
+1090 data 85,fa,a9,43,85,fb,a9,00 
+1100 data 85,fc,a9,d8,85,fd,a9,ff 
+1110 data 85,d8,a9,70,85,01,a9,fc 
+1120 data 8d,b9,02,a9,00,8d,00,ff 
+1130 data a0,00,a9,fa,a2,00,20,74 
+1140 data ff,a2,0f,20,77,ff,c8,d0 
+1150 data f1,e6,fb,e6,fd,a5,fd,c5 
+1160 data dc,d0,e5,a9,73,85,01,a9 
+1170 data a0,95,d9,a0,00,b9,f8,07 
+1180 data 99,f8,1f,c8,c0,08,d0,f5 
+1190 data a2,3f,8e,00,ff,ad,10,47 
+1200 data a2,00,8e,00,ff,bd,21,d0 
+1210 data 20,c4,77,60,*
+2030: 
+2040 end : prg by viola luca 1989
+
