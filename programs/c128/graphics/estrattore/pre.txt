@@ -1,0 +1,12 @@
+1 rem ** questo programma deve essere ** 
+2 rem ** attivato prima  di caricare  ** 
+3 rem ** e lanciare  "visualizza"     **
+4 :
+5 scnclr
+10 graphicclr:color0,1:color4,1:color5,6 
+20 char1,18,12,"attendi..."
+30 poke45,1:poke46,dec("50"):poke 4624,2 
+33 poke 4625 ,dec("50"):for t = 0 to 2 
+35 poke dec("5000")+t,0:next 
+40 dload "visualizza" 
+50 end
