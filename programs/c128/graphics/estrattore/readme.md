@@ -31,11 +31,33 @@ Il programma è composto di 3 parti (più avanti  i link alle versioni scaricabi
 
   Ma non è stato comunque sufficiente: sia nei numeri delle linee DATA che nel disassemblato ci sono infatti degli errori!
 
+# Gli errori
+
+L'immagine qui sotto evidenzia alcuni errori individuati nel codice:
+
+<img width="560" alt="image" src="https://github.com/user-attachments/assets/4b1f4ce0-ff13-4b08-9cd3-7c6221aa1493" />
+
+Solo sostituendo il 46, lo 01, lo 00 e lo 0a con 44, 00, 03 e 09 il programma viene eseguito correttamente senza indicare un errore nei DATA.
+
+I primi 3 errori si desumono dal disassemblato commentato; lo 0a da sostituire con 09 è una correzione a penna scritta sul disassemblato pubblicato sulla rivista.
+
+Tuttavia, anche con queste correzioni i risultati non sono ottimali: la mappa colore non è individuata correttamente:
 
 
 # Disassemblato originale
 
-![image](https://github.com/user-attachments/assets/1503cf69-0717-4c23-bd01-34efaa7d9102)
+
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/4e29dad9-a0eb-4281-bfd6-da173574d200" />
+
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/20c56058-1956-41ab-acf2-fe38f305f598" />
+
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/80e3dd9f-3313-4b97-bba9-042284431e41" />
+
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/45fe69d0-20e6-4f2b-bad5-9a1be72a5200" />
+
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/ce8bd009-e0a1-46a4-b8ed-5bdf17dbec33" />
+
+
 
 
 
