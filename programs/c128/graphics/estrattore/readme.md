@@ -43,6 +43,15 @@ I primi 3 errori si desumono dal disassemblato commentato; lo 0a da sostituire c
 
 Tuttavia, anche con queste correzioni i risultati non sono ottimali: la mappa colore non è individuata correttamente:
 
+Originale
+
+<img width="313" alt="image" src="https://github.com/user-attachments/assets/024a7838-8490-4990-b08d-0be11d2619fb" />
+
+Estratta
+
+![image](https://github.com/user-attachments/assets/4b71b9ce-b8ff-4b2d-99ef-f6ee9765936d)
+
+Verifiche in corso...
 
 # Disassemblato originale
 
