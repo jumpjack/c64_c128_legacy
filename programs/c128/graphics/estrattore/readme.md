@@ -49,7 +49,8 @@ Originale
 
 Estratta
 
-![image](https://github.com/user-attachments/assets/4b71b9ce-b8ff-4b2d-99ef-f6ee9765936d)
+<img width="307" alt="image" src="https://github.com/user-attachments/assets/62e7d8d6-4228-4952-858a-e4a8ce4c36ac" />
+
 
 Verifiche in corso...
 
