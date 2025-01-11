@@ -1,0 +1,71 @@
+10 rem "estrattore" di pagine grafiche
+20 rem programa per c/128 da usare
+30 rem per estrarre schermate del c/64
+40 :
+100 trap 300
+110 scnclr: fast
+120 for lc=4864 to 5769: read a$: x=dec(a$)
+130 poke lc,x
+140 sum=sum +x
+150 next: slow
+160 read ck: if ck<>sum then slow: print"errore nei data !!!";sum:stop
+170 color0,1:color4,1:color5,16
+180 print chr$(14) chr$(11)
+190 print"*** estrattore di schermate ***"
+200 print"# software per c/128 #"
+210 print"# made by luca viola #"
+220 print:print:print
+230 print"premi un tasto per il modo 64":print
+240 print"premi reset per tornare in modo 128":print
+250 print"quindi batti: sys 5172 <r>":print
+260 print:print"e segui le istruzioni su schermo."
+270 print:print"inizio: sys 4864"
+280 get key a$:sys 4864
+290 end
+300 slow:print sum:print err$(er);"in";el:help:end
+997:
+998:
+999:
+
+1000  data  a9,00,85,fa,a9,20,85,fb,a9,fa,8d,b9,02,a0,00,b9,2e,13,a2,01,20,77,ff
+1010  data  c8,c0,27,d0,f3,20,24,e2,a9,01,a0,20,a2,00,85,02,84,03,86,04,4c,71,ff
+1020  data  a9,7e,8d,00,ff,a9,c7,8d,f8,ff,a9,13,8d,f9,ff,a9,e3,85,01,a9,2f,85,00
+1030  data  a9,48,8d,06,d5,a9,f7,8d,05,d5,4c,e2,fc,a2,00,bd,00,d8,9d,00,18,bd,00
+1040  data  d9,9d,00,19,bd,00,da,9d,00,1a,bd,00,db,9d,00,1b,e8,d0,e5,60,ad,f3,17
+1050  data  29,03,85,fa,a9,03,38,e5,fa,85,fa,a2,00,06,fa,26,fb,e8,e0,0e,d0,f7,a5
+1060  data  fa,85,fc,a5,fb,85,fd,ad,f0,17,29,08,f0,0e,a9,00,18,65,fa,85,fc,a9,20
+1070  data  18,65,fb,85,fd,ad,f0,17,29,f0,85,fe,a2,00,06,fe,26,ff,e8,e0,06,d0,f7
+1080  data  a5,fe,18,65,fa,85,fe,a5,ff,18,65,fb,85,ff,60,ad,18,d0,8d,f0,17,ad,20
+1090  data  d0,8d,f1,17,ad,21,d0,8d,f2,17,a9,00,8d,f3,17,20,52,13,20,70,13,a2,00
+1100  data  b5,fa,9d,f5,17,e8,e0,06,d0,f6,4c,24,e2,a9,ff,85,d8,a9,70,85,01,a2,00
+1110  data  bd,00,18,9d,00,d8,bd,00,19,9d,00,d9,bd,00,1a,9d,00,da,bd,00,1b,9d,00
+1120  data  db,e8,d0,e5,a9,a0,85,d8,ad,f0,17,8d,2d,0a,ad,f1,17,8d,20,d0,ad,f2,17
+1130  data  8d,21,d0,a9,44,8d,06,d5,60,a9,00,8d,20,d0,8d,21,d0,a9,05,85,f1,a9,93
+1140  data  20,d2,ff,a0,00,a2,07,18,20,f0,ff,20,7d,ff,50,52,45,4d,49,20,53,50,41
+1150  data  5a,49,4f,20,50,45,52,20,45,4e,54,52,41,52,45,20,49,4e,20,50,41,47,49
+1160  data  4e,41,20,20,20,20,0d,0d,47,52,41,46,49,43,41,20,45,20,50,45,52,20,43
+1170  data  41,4d,42,49,41,52,45,20,42,41,4e,43,4f,20,56,49,44,45,4f,0d,0d,0d,3c
+1180  data  52,45,54,55,52,4e,3e,20,50,45,52,20,43,4f,4e,46,45,52,4d,41,52,45,00
+1190  data  a5,d4,c9,3c,d0,fa,a2,00,bd,f5,17,95,fa,e8,e0,06,d0,f6,20,f3,13,a0,00
+1200  data  a5,d4,c9,01,f0,37,c9,58,f0,1f,ae,fe,17,e0,ff,f0,ef,a9,ff,8d,fe,17,c8
+1210  data  c0,04,30,02,a0,00,8c,00,dd,8c,f3,17,20,70,13,4c,cc,14,a9,00,8d,fe,17
+1220  data  4c,cc,14,00,00,00,00,00,00,00,00,00,00,00,00,a9,04,8d,06,d5,a9,00,85
+1230  data  fa,a9,40,85,fb,a9,fa,8d,b9,02,a0,00,a2,01,a9,fc,20,74,ff,a2,00,20,77
+1240  data  ff,c8,d0,f1,e6,fb,e6,fd,a5,fb,c9,60,d0,e5,a9,40,85,fa,a9,5f,85,fb,a9
+1250  data  fa,8d,b9,02,a0,00,a2,01,a9,fe,20,74,ff,a2,00,20,77,ff,c8,d0,f1,e6,fb
+1260  data  e6,ff,a5,fb,c9,64,d0,e5,a2,00,bd,00,18,9d,28,63,bd,00,19,9d,28,64,bd
+1270  data  00,1a,9d,28,65,bd,00,1b,9d,28,66,e8,d0,e5,ad,f2,17,8d,10,67,20,84,ff
+1280  data  20,00,c0,a2,00,bd,7a,16,9d,d0,17,e8,e0,10,d0,f5,a9,00,8d,20,d0,8d,21
+1290  data  d0,a9,0c,85,f1,a0,00,a2,00,18,20,f0,ff,20,7d,ff,4b,4f,41,4c,41,20,49
+1300  data  44,20,28,41,2d,5a,29,3a,00,20,e4,ff,c9,0d,f0,f9,c9,41,30,f5,c9,5b,10
+1310  data  f1,8d,d5,17,20,d2,ff,a2,03,a9,0d,20,d2,ff,e8,e0,03,d0,f8,20,7d,ff,49
+1320  data  4e,53,45,52,54,20,4e,41,4d,45,20,28,38,20,43,48,41,52,20,4d,41,58,2e
+1330  data  29,3a,00,a2,1a,a9,03,18,20,2d,c0,a2,21,a9,03,38,20,2d,c0,a9,1b,20,d2
+1340  data  ff,a9,4d,20,d2,ff,a9,13,20,d2,ff,a0,00,20,cf,ff,c9,0d,f0,08,99,d7,17
+1350  data  c8,c0,0a,30,f1,a9,13,20,d2,ff,a9,13,20,d2,ff,a9,1b,20,d2,ff,a9,4c,20
+1360  data  d2,ff,a9,93,20,d2,ff,a2,00,a9,0d,20,d2,ff,e8,e0,0a,d0,f6,a9,0f,a2,d0
+1370  data  a0,17,20,bd,ff,a9,00,a2,00,20,68,ff,a9,00,a2,08,a0,00,20,ba,ff,a9,00
+1380  data  85,fa,a9,40,85,fb,a9,fa,a2,11,a0,67,20,d8,ff,60,81,50,49,43,20,41,20
+1390  data  20,20,20,20,20,20,20,20,20
+1400  data  108061
+1410  end
