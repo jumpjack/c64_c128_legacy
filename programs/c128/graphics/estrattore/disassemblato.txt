@@ -136,7 +136,7 @@
 1425  8D 20 D0    STA $D020
 1428  AD F2 17    LDA $17F2
 142b  8D 21 D0    STA $D021
-142e  A9 44       LDA #$44
+142e  A9 44       LDA #$44 ; *************** #$44 (0100.0100) in disassemblato, 46 (0100.0110) in caricatore
 1430  8D 06 D5    STA $D506
 1433  60          RTS
 1434  A9 00       LDA #$00
@@ -160,7 +160,7 @@ grafica e per cambiare banco video...
 14b5  A5 D4       LDA $D4
 14b7  C9 3C       CMP #$3C
 14b9  D0 FA       BNE $14B5
-14bb  A2 00       LDX #$00
+14bb  A2 00       LDX #$00 ; ***********************  #$00 in disassemblto, 01 in caricatore
 14bd  BD F5 17    LDA $17F5,X
 14c0  95 FA       STA $FA,X
 14c2  E8          INX
