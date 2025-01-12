@@ -151,52 +151,12 @@
 1449  18          CLC
 144a  20 F0 FF    JSR $FFF0
 144d  20 7D FF    JSR $FF7D
-1450  50 52       BVC $14A4
-1452  45 4D       EOR $4D
-1454  49 20       EOR #$20
-1456  53 50       SRE ($50),Y
-1458  41 5A       EOR ($5A,X)
-145a  49 4F       EOR #$4F
-145c  20 50 45    JSR $4550
-145f  52          JAM
-1460  20 45 4E    JSR $4E45
-1463  54 52       NOOP $52,X
-1465  41 52       EOR ($52,X)
-1467  45 20       EOR $20
-1469  49 4E       EOR #$4E
-146b  20 50 41    JSR $4150
-146e  47 49       SRE $49
-1470  4E 41 20    LSR $2041
-1473  20 20 20    JSR $2020
-1476  0D 0D 47    ORA $470D
-1479  52          JAM
-147a  41 46       EOR ($46,X)
-147c  49 43       EOR #$43
-147e  41 20       EOR ($20,X)
-1480  45 20       EOR $20
-1482  50 45       BVC $14C9
-1484  52          JAM
-1485  20 43 41    JSR $4143
-1488  4D 42 49    EOR $4942
-148b  41 52       EOR ($52,X)
-148d  45 20       EOR $20
-148f  42          JAM
-1490  41 4E       EOR ($4E,X)
-1492  43 4F       SRE ($4F,X)
-1494  20 56 49    JSR $4956
-1497  44 45       NOOP $45
-1499  4F 0D 0D    SRE $0D0D
-149c  0D 3C 52    ORA $523C
-149f  45 54       EOR $54
-14a1  55 52       EOR $52,X
-14a3  4E 3E 20    LSR $203E
-14a6  50 45       BVC $14ED
-14a8  52          JAM
-14a9  20 43 4F    JSR $4F43
-14ac  4E 46 45    LSR $4546
-14af  52          JAM
-14b0  4D 41 52    EOR $5241
-14b3  45 00       EOR $00
+
+1450-14b4: 
+premi spazio per entrare in pagina    .. 
+grafica e per cambiare banco video...
+<return> per confermare.
+
 14b5  A5 D4       LDA $D4
 14b7  C9 3C       CMP #$3C
 14b9  D0 FA       BNE $14B5
