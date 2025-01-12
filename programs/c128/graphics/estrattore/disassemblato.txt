@@ -30,8 +30,8 @@
 133f  85 01       STA $01
 1341  A9 2F       LDA #$2F
 1343  85 00       STA $00
-1345  A9 48       LDA #$48
-1347  8D 06 D5    STA $D506
+1345  A9 48       LDA #$48  ; bin 01.00 10.00: abilita grafica in RAM 1; 1k di ram comune in alto da $FC00
+1347  8D 06 D5    STA $D506 ; dec 54534 (originae: %04, 00.00 01.00, grafica in RAM 0; 1k di ram comune in basso)
 134a  A9 F7       LDA #$F7
 134c  8D 05 D5    STA $D505
 134f  4C E2 FC    JMP $FCE2
@@ -136,8 +136,33 @@
 1425  8D 20 D0    STA $D020
 1428  AD F2 17    LDA $17F2
 142b  8D 21 D0    STA $D021
-142e  A9 44       LDA #$44 ; *************** #$44 (0100.0100) in disassemblato, 46 (0100.0110) in caricatore
-1430  8D 06 D5    STA $D506
+142e  A9 44       LDA #$44 ; **************        #$44 (01.00 01.00) in disassemblato, 46 (01.00 01.10) in caricatore
+; grafica in ram 1; 1k in comune in basso (con $44 sarebbero 8k)
+1430  8D 06 D5    STA $D506 ; dec 54534 (originale: %04, 00.00 01.00)
+
+; quantità ram comune: bit 0-1
+; 00: 1k
+; 01: 4k
+; 10: 8k
+; 11: 16k
+
+; ram comune: bit 2-3
+; 00: no
+; 01: in basso
+; 10: in alto
+; 11: entrambi
+
+; bit 4-5: non usati
+
+; bit 6:
+: 0: grafica in ram 0
+; 1: grafica in ram 1
+
+; bit 7: non usato
+
+; valore necessario: x1xx.00xx
+; valore originario: 0000.0100
+
 1433  60          RTS
 1434  A9 00       LDA #$00
 1436  8D 20 D0    STA $D020
@@ -203,8 +228,8 @@ grafica e per cambiare banco video...
 1507  00          BRK
 
 1508  00          BRK
-1509  A9 04       LDA #$04
-150b  8D 06 D5    STA $D506
+1509  A9 04       LDA #$04  ; bin 00.00 01.00 - banco 0, ram comune in basso
+150b  8D 06 D5    STA $D506 ; dec 54534  (original value: %04, 0000.0010)
 150e  A9 00       LDA #$00
 1510  85 FA       STA $FA
 1512  A9 40       LDA #$40
