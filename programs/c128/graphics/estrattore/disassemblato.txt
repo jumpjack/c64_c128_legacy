@@ -275,14 +275,9 @@ grafica e per cambiare banco video...
 15a4  18          CLC
 15a5  20 F0 FF    JSR $FFF0
 15a8  20 7D FF    JSR $FF7D
-15ab  4B 4F       ASR #$4F
-15ad  41 4C       EOR ($4C,X)
-15af  41 20       EOR ($20,X)
-15b1  49 44       EOR #$44
-15b3  20 28 41    JSR $4128
-15b6  2D 5A 29    AND $295A
-15b9  3A          NOOP
-15ba  00          BRK
+
+15ab-15ba: koala id (a-z):
+
 15bb  20 E4 FF    JSR $FFE4
 15be  C9 0D       CMP #$0D
 15c0  F0 F9       BEQ $15BB
@@ -293,27 +288,16 @@ grafica e per cambiare banco video...
 15c8  10 F1       BPL $15BB
 15ca  8D D5 17    STA $17D5
 15cd  20 D2 FF    JSR $FFD2
-15d0  A2 03       LDX #$03
+15d0  A2 03       LDX #$00
 15d2  A9 0D       LDA #$0D
 15d4  20 D2 FF    JSR $FFD2
 15d7  E8          INX
 15d8  E0 03       CPX #$03
 15da  D0 F8       BNE $15D4
 15dc  20 7D FF    JSR $FF7D
-15df  49 4E       EOR #$4E
-15e1  53 45       SRE ($45),Y
-15e3  52          JAM
-15e4  54 20       NOOP $20,X
-15e6  4E 41 4D    LSR $4D41
-15e9  45 20       EOR $20
-15eb  28          PLP
-15ec  38          SEC
-15ed  20 43 48    JSR $4843
-15f0  41 52       EOR ($52,X)
-15f2  20 4D 41    JSR $414D
-15f5  58          CLI
-15f6  2E 29 3A    ROL $3A29
-15f9  00          BRK
+
+15df-15f9 : insert name (8 char max.):
+
 15fa  A2 1A       LDX #$1A
 15fc  A9 03       LDA #$03
 15fe  18          CLC
@@ -334,7 +318,7 @@ grafica e per cambiare banco video...
 1620  F0 08       BEQ $162A
 1622  99 D7 17    STA $17D7,Y
 1625  C8          INY
-1626  C0 0A       CPY #$0A
+1626  C0 0A       CPY #$09
 1628  30 F1       BMI $161B
 162a  A9 13       LDA #$13
 162c  20 D2 FF    JSR $FFD2
@@ -373,10 +357,6 @@ grafica e per cambiare banco video...
 1674  A0 67       LDY #$67
 1676  20 D8 FF    JSR $FFD8
 1679  60          RTS
-167a  81 50       STA ($50,X)
-167c  49 43       EOR #$43
-167e  20 41 20    JSR $2041
-1681  20 20 20    JSR $2020
-1684  20 20 20    JSR $2020
-1687  20 20 20    JSR $2020
+167a-1687: pic a__________
+
 
