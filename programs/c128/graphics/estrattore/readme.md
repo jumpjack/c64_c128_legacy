@@ -62,7 +62,9 @@ In questo caso perà si tratta solo di un errore di battitura, non ha effetto su
 
 
 
-# Disassemblato originale
+# Disassemblato 
+
+## Originale
 
 
 <img width="400" alt="image" src="https://github.com/user-attachments/assets/4e29dad9-a0eb-4281-bfd6-da173574d200" />
@@ -76,7 +78,12 @@ In questo caso perà si tratta solo di un errore di battitura, non ha effetto su
 <img width="400" alt="image" src="https://github.com/user-attachments/assets/ce8bd009-e0a1-46a4-b8ed-5bdf17dbec33" />
 
 
-# Disassemblato ricavato
+## Con annotazioni grafiche mie
+
+<img width="560" alt="image" src="https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/disassemblato.jpg" />
+
+## Ricavato da caricatore BASIC in emulatore
+
 - [link](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/disassemblato.txt)
 
 
