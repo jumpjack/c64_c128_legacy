@@ -14,9 +14,8 @@ Il programma è composto di 3 parti:
 - [parte 1: "estrattore"](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/estrattore.txt): programma principale, che dirotta la routine di reset in modo da preservare i dati, e li salva su disco.
 
 <img width="695" alt="image" src="https://github.com/user-attachments/assets/348e21a6-86ff-40b7-8939-79d440eb0128" />
-
   
--[ parte 2: "preloader"](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/pre.txt)? Fa "qualcosa", e poi carica il programma "visualizza"
+- [parte 2: "preloader"](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/pre.txt)? Fa "qualcosa", e poi carica il programma "visualizza"
 
 ![image](https://github.com/user-attachments/assets/d328979b-1e90-4d29-9434-896598dd926b)
 
@@ -35,13 +34,13 @@ Il programma è composto di 3 parti:
 
 L'immagine qui sotto evidenzia alcuni errori individuati nel codice:
 
-<img width="560" alt="image" src="https://github.com/user-attachments/assets/4b1f4ce0-ff13-4b08-9cd3-7c6221aa1493" />
+<img width="560" alt="image" src="https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/errori.jpg" />
 
-Solo sostituendo il 46, lo 01, lo 00 e lo 0a con 44, 00, 03 e 09 il programma viene eseguito correttamente senza indicare un errore nei DATA.
+Solo sostituendo il 46, lo 01 e lo 0a con 44, 00 e 09 il programma viene eseguito correttamente senza indicare un errore nei DATA.
 
-I primi 3 errori si desumono dal disassemblato commentato; lo 0a da sostituire con 09 è una correzione a penna scritta sul disassemblato pubblicato sulla rivista.
+I primi 2 errori si desumono dal disassemblato commentato; lo 0a da sostituire con 09 è una correzione a penna scritta sul disassemblato pubblicato sulla rivista.
 
-Tuttavia, anche con queste correzioni i risultati non sono ottimali: la mappa colore non è individuata correttamente:
+Correggendo questi errori, il listato si compila senza indicare errori nei DATA, tuttavia, anche i risultati non sono ottimali: la mappa colore non è individuata correttamente:
 
 Originale
 
@@ -52,7 +51,16 @@ Estratta
 <img width="307" alt="image" src="https://github.com/user-attachments/assets/62e7d8d6-4228-4952-858a-e4a8ce4c36ac" />
 
 
-Verifiche in corso...
+**Verifiche in corso...  Dovrò ristudiarmi tutto il meccanismo di memorizzazione delle immagini in C64 e C128....**
+
+
+Nel disassemblato commentato è presente un ulteriore errore:
+
+<img width="560" alt="image" src="https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/errori2.jpg" />
+
+In questo caso perà si tratta solo di un errore di battitura, non ha effetto sul programma vero e proprio.
+
+
 
 # Disassemblato originale
 
