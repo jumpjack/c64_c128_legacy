@@ -1,1 +1,2 @@
-.
+- [Game mapper simple](https://jumpjack.github.io/c64_c128_legacy/maps/c64-game-mapper.html)
+- [Game mapper advanced](https://jumpjack.github.io/c64_c128_legacy/maps/c64-game-mapper-advanced.html)
