@@ -1,3 +1,5 @@
+; ///////// ROUTINE STARTED BY BASIC LOADER  (SYS 4864)
+
 1300  A9 00       LDA #$00
 1302  85 FA       STA $FA
 1304  A9 20       LDA #$20
@@ -19,6 +21,9 @@
 1327  84 03       STY $03
 1329  86 04       STX $04
 132b  4C 71 FF    JMP $FF71
+
+
+; //////// ???
 132e  A9 7E       LDA #$7E
 1330  8D 00 FF    STA $FF00
 1333  A9 C7       LDA #$C7
@@ -26,7 +31,6 @@
 1338  A9 13       LDA #$13
 133a  8D F9 FF    STA $FFF9
 133d  A9 E3       LDA #$E3
-
 133f  85 01       STA $01
 1341  A9 2F       LDA #$2F
 1343  85 00       STA $00
@@ -35,6 +39,8 @@
 134a  A9 F7       LDA #$F7
 134c  8D 05 D5    STA $D505
 134f  4C E2 FC    JMP $FCE2
+
+;/////////// SUBROUTINE 1: Save color mwemory at reset
 1352  A2 00       LDX #$00
 1354  BD 00 D8    LDA $D800,X
 1357  9D 00 18    STA $1800,X
@@ -47,12 +53,13 @@
 136c  E8          INX
 136d  D0 E5       BNE $1354
 136f  60          RTS
+
+;/////////// SUBROUTINE 2: set pointers to bitmap and to color memory taking into account video bank stored in $17f3
 1370  AD F3 17    LDA $17F3
 1373  29 03       AND #$03
 1375  85 FA       STA $FA
 1377  A9 03       LDA #$03
 1379  38          SEC
-
 137a  E5 FA       SBC $FA
 137c  85 FA       STA $FA
 137e  A2 00       LDX #$00
@@ -93,8 +100,9 @@
 13c1  18          CLC
 13c2  65 FB       ADC $FB
 13c4  85 FF       STA $FF
-
 13c6  60          RTS
+
+; ///////// ROUTINE EXECUTED AT RESET
 13c7  AD 18 D0    LDA $D018
 13ca  8D F0 17    STA $17F0
 13cd  AD 20 D0    LDA $D020
@@ -112,6 +120,8 @@
 13ec  E0 06       CPX #$06
 13ee  D0 F6       BNE $13E6
 13f0  4C 24 E2    JMP $E224
+
+; //////////// SUBROUTINE 4: SHOW BITMAP VISIBLE AT RESET
 13f3  A9 FF       LDA #$FF
 13f5  85 D8       STA $D8
 13f7  A9 70       LDA #$70
@@ -129,7 +139,6 @@
 1416  D0 E5       BNE $13FD
 1418  A9 A0       LDA #$A0
 141a  85 D8       STA $D8
-
 141c  AD F0 17    LDA $17F0
 141f  8D 2D 0A    STA $0A2D
 1422  AD F1 17    LDA $17F1
@@ -139,7 +148,9 @@
 142e  A9 44       LDA #$44 ; **************        #$44 (01.00 01.00) in disassemblato, 46 (01.00 01.10) in caricatore
 ; grafica in ram 1; 1k in comune in basso (con $44 sarebbero 8k)
 1430  8D 06 D5    STA $D506 ; dec 54534 (originale: %04, 00.00 01.00)
+1433  60          RTS
 
+; $d506 explained:
 ; quantità ram comune: bit 0-1
 ; 00: 1k
 ; 01: 4k
@@ -163,7 +174,8 @@
 ; valore necessario: x1xx.00xx
 ; valore originario: 0000.0100
 
-1433  60          RTS
+
+;//////// MAIN (sys 5172)
 1434  A9 00       LDA #$00
 1436  8D 20 D0    STA $D020
 1439  8D 21 D0    STA $D021
@@ -198,7 +210,6 @@ grafica e per cambiare banco video...
 14d0  F0 37       BEQ $1509
 14d2  C9 58       CMP #$58
 14d4  F0 1F       BEQ $14F5
-
 14d6  AE FE 17    LDX $17FE
 14d9  E0 FF       CPX #$FF
 14db  F0 EF       BEQ $14CC
@@ -212,9 +223,13 @@ grafica e per cambiare banco video...
 14ec  8C F3 17    STY $17F3
 14ef  20 70 13    JSR $1370
 14f2  4C CC 14    JMP $14CC
+
+
 14f5  A9 00       LDA #$00
 14f7  8D FE 17    STA $17FE
 14fa  4C CC 14    JMP $14CC
+
+
 14fd  00          BRK
 14fe  00          BRK
 14ff  00          BRK
@@ -226,8 +241,10 @@ grafica e per cambiare banco video...
 1505  00          BRK
 1506  00          BRK
 1507  00          BRK
-
 1508  00          BRK
+
+
+; ////  TRANSFER AND SAVE
 1509  A9 04       LDA #$04  ; bin 00.00 01.00 - banco 0, ram comune in basso
 150b  8D 06 D5    STA $D506 ; dec 54534  (original value: %04, 0000.0010)
 150e  A9 00       LDA #$00
@@ -307,7 +324,6 @@ grafica e per cambiare banco video...
 15be  C9 0D       CMP #$0D
 15c0  F0 F9       BEQ $15BB
 15c2  C9 41       CMP #$41
-
 15c4  30 F5       BMI $15BB
 15c6  C9 5B       CMP #$5B
 15c8  10 F1       BPL $15BB
@@ -354,7 +370,6 @@ grafica e per cambiare banco video...
 1639  A9 4C       LDA #$4C
 163b  20 D2 FF    JSR $FFD2
 163e  A9 93       LDA #$93
-
 1640  20 D2 FF    JSR $FFD2
 1643  A2 00       LDX #$00
 1645  A9 0D       LDA #$0D
@@ -382,6 +397,7 @@ grafica e per cambiare banco video...
 1674  A0 67       LDY #$67
 1676  20 D8 FF    JSR $FFD8
 1679  60          RTS
+
 167a-1687: pic a__________
 
 
