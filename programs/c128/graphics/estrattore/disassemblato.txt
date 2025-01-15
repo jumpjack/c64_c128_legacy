@@ -23,7 +23,7 @@
 132b  4C 71 FF    JMP $FF71
 
 
-; //////// ???
+; //////// HACKED "GO 64" routine
 132e  A9 7E       LDA #$7E
 1330  8D 00 FF    STA $FF00
 1333  A9 C7       LDA #$C7
