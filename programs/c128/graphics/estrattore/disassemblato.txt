@@ -150,30 +150,6 @@
 1430  8D 06 D5    STA $D506 ; dec 54534 (originale: %04, 00.00 01.00)
 1433  60          RTS
 
-; $d506 explained:
-; quantità ram comune: bit 0-1
-; 00: 1k
-; 01: 4k
-; 10: 8k
-; 11: 16k
-
-; ram comune: bit 2-3
-; 00: no
-; 01: in basso
-; 10: in alto
-; 11: entrambi
-
-; bit 4-5: non usati
-
-; bit 6:
-: 0: grafica in ram 0
-; 1: grafica in ram 1
-
-; bit 7: non usato
-
-; valore necessario: x1xx.00xx
-; valore originario: 0000.0100
-
 
 ;//////// MAIN (sys 5172)
 1434  A9 00       LDA #$00
@@ -401,3 +377,27 @@ grafica e per cambiare banco video...
 167a-1687: pic a__________
 
 
+
+; $d506 explained:
+; quantità ram comune: bit 0-1
+; 00: 1k
+; 01: 4k
+; 10: 8k
+; 11: 16k
+
+; ram comune: bit 2-3
+; 00: no
+; 01: in basso
+; 10: in alto
+; 11: entrambi
+
+; bit 4-5: non usati
+
+; bit 6:
+: 0: grafica in ram 0
+; 1: grafica in ram 1
+
+; bit 7: non usato
+
+; valore necessario: x1xx.00xx
+; valore originario: 0000.0100
