@@ -62,7 +62,7 @@
 
 
 
-;/////////// SUBROUTINE 1: Save color mwemory at reset
+;/////////// SUBROUTINE 1: Save color mwemory in user memory ($1800-$1bff, 1024 bytes)
 1352  A2 00       LDX #$00
 1354  BD 00 D8    LDA $D800,X
 1357  9D 00 18    STA $1800,X
@@ -77,28 +77,39 @@
 136f  60          RTS
 
 
-;/////////// SUBROUTINE 2: set pointers to bitmap and to color memory taking into account video bank stored in $17f3
-1370  AD F3 17    LDA $17F3
+;/////////// SUBROUTINE 2: calculate  pointers to bitmap and to color memory taking into account video bank stored in $17f3, store in page 0
+; ---- POKE $FA, 3 - PEEK($17f3)
+1370  AD F3 17    LDA $17F3 ; required bank number
 1373  29 03       AND #$03
-1375  85 FA       STA $FA
+1375  85 FA       STA $FA 
 1377  A9 03       LDA #$03
 1379  38          SEC
 137a  E5 FA       SBC $FA
 137c  85 FA       STA $FA
+; ---- end POKE
+
+; ---- Multiply bank number (previously strored in $FA) by 16384 (2^14, $4000) by left-shiting it 14 times
 137e  A2 00       LDX #$00
 1380  06 FA       ASL $FA
 1382  26 FB       ROL $FB
 1384  E8          INX
 1385  E0 0E       CPX #$0E
 1387  D0 F7       BNE $1380
+; Now $FA+$FB holds the value of selected bank multiplied by 16384 ($4000)
+
+;  Copy such value to $FC+$FD
 1389  A5 FA       LDA $FA
 138b  85 FC       STA $FC
 138d  A5 FB       LDA $FB
 138f  85 FD       STA $FD
-1391  AD F0 17    LDA $17F0
-1394  29 08       AND #$08
-1396  F0 0E       BEQ $13A6
-1398  A9 00       LDA #$00
+
+1391  AD F0 17    LDA $17F0 ; Contents of $D018 at reset
+1394  29 08       AND #$08  ; check bit 3
+1396  F0 0E       BEQ $13A6 ; bit = 0 --> $13a6
+                            ; bit = 1: bitmap address is located at $2000 + bank address
+
+; $FE+$FF = $2000 + BANK*$4000
+1398  A9 00       LDA #$00  
 139a  18          CLC
 139b  65 FA       ADC $FA
 139d  85 FC       STA $FC
