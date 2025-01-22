@@ -1,15 +1,16 @@
-; ///////// ROUTINE STARTED BY BASIC LOADER  (SYS 4864)
-
+; ------ ROUTINE STARTED BY BASIC LOADER  (SYS 4864)
+; ------  Copy $27 (=39) bytes (shouldn't they be 36?) from $132e (hacked GO64 routiner) to $2000 (memory area preserved after reset),
+; ------  and jump to the routine itself.
 ; Store address $2000 in $FB+$FA:
 1300  A9 00       LDA #$00
 1302  85 FA       STA $FA
 1304  A9 20       LDA #$20
 1306  85 FB       STA $FB
 
-1308  A9 FA       LDA #$FA ; Prepare pointer  to $FA+$FB for $FF77 indrect STA
-130a  8D B9 02    STA $02B9 ; ??
+1308  A9 FA       LDA #$FA  ; Store pointer to $FA+$FB 
+130a  8D B9 02    STA $02B9 ; in zero page, for $FF77 indrect STA
 
-; ------  Copy $27 (=39) bytes from $132e (hacked GO64 routiner) to $2000 (memory area preserved after reset)
+; FOR Y = 0 to 39 : POKE $2000+Y, PEEK($132E+Y)
 130d  A0 00       LDY #$00 ; intial offset for indrect STA
 130f  B9 2E 13    LDA $132E,Y
 1312  A2 01       LDX #$01 ; set bank number for indrect STA
@@ -17,9 +18,9 @@
 1317  C8          INY
 1318  C0 27       CPY #$27 
 131a  D0 F3       BNE $130F
-; --- end copy loop
+; ... NEXT
 
-131c  20 24 E2    JSR $E224
+131c  20 24 E2    JSR $E224 ; Initialize the soft reset vector
 
 ;  Jump to $2000 in bank 1, where hacked GO64 routine is stored
 131f  A9 01       LDA #$01 ; Destination bank
@@ -31,22 +32,35 @@
 132b  4C 71 FF    JMP $FF71 ; JMPFAR: jumps to address Y+X in bank A
 
 
-; //////// HACKED "GO 64" routine
+; //////// HACKED "GO 64" routine (36 bytes long)
+; Set RAM 1 for I/O
 132e  A9 7E       LDA #$7E
 1330  8D 00 FF    STA $FF00
+
+; Hijack reset pointer to custom routine located at $13c7, so SYS 64738 will jump there:
 1333  A9 C7       LDA #$C7
 1335  8D F8 FF    STA $FFF8
 1338  A9 13       LDA #$13
 133a  8D F9 FF    STA $FFF9
+
+; reset I/O ports
 133d  A9 E3       LDA #$E3
 133f  85 01       STA $01
 1341  A9 2F       LDA #$2F
 1343  85 00       STA $00
+
+; Setup common RAM amount
 1345  A9 48       LDA #$48  ; bin 01.00 10.00: abilita grafica in RAM 1; 1k di ram comune in alto da $FC00
-1347  8D 06 D5    STA $D506 ; dec 54534 (originae: %04, 00.00 01.00, grafica in RAM 0; 1k di ram comune in basso)
+1347  8D 06 D5    STA $D506 ; dec 54534 (originale: %04, 00.00 01.00, grafica in RAM 0; 1k di ram comune in basso)
+
+; Enable C64 ROM
 134a  A9 F7       LDA #$F7
 134c  8D 05 D5    STA $D505
+
+; sys 64738 (Commodore 64 standard reset, but hijacked to $13c7)
 134f  4C E2 FC    JMP $FCE2
+
+
 
 ;/////////// SUBROUTINE 1: Save color mwemory at reset
 1352  A2 00       LDX #$00
@@ -61,6 +75,7 @@
 136c  E8          INX
 136d  D0 E5       BNE $1354
 136f  60          RTS
+
 
 ;/////////// SUBROUTINE 2: set pointers to bitmap and to color memory taking into account video bank stored in $17f3
 1370  AD F3 17    LDA $17F3
@@ -110,24 +125,32 @@
 13c4  85 FF       STA $FF
 13c6  60          RTS
 
-; ///////// ROUTINE EXECUTED AT RESET
-13c7  AD 18 D0    LDA $D018
+
+; ///////// ROUTINE EXECUTED AT RESET: SYS 64738 in C64 mode will jump here
+; Save registers:
+13c7  AD 18 D0    LDA $D018 ; Pointers to screen map and charset map
 13ca  8D F0 17    STA $17F0
-13cd  AD 20 D0    LDA $D020
+13cd  AD 20 D0    LDA $D020 ; Border color
 13d0  8D F1 17    STA $17F1
-13d3  AD 21 D0    LDA $D021
+13d3  AD 21 D0    LDA $D021 ; Background color
 13d6  8D F2 17    STA $17F2
-13d9  A9 00       LDA #$00
+
+13d9  A9 00       LDA #$00 ; Required bank number
 13db  8D F3 17    STA $17F3
-13de  20 52 13    JSR $1352
-13e1  20 70 13    JSR $1370
+
+13de  20 52 13    JSR $1352 ; Save color memory of bitmap
+13e1  20 70 13    JSR $1370 ; Calculate pointers to bitmap, to color 1 and to color 2 and stores in page 0 from $fa to $ff (6 bytes)
+
+; Save above pointers by moving from page 0 to user area ($17f5-$17fa)
 13e4  A2 00       LDX #$00
 13e6  B5 FA       LDA $FA,X
 13e8  9D F5 17    STA $17F5,X
 13eb  E8          INX
 13ec  E0 06       CPX #$06
 13ee  D0 F6       BNE $13E6
-13f0  4C 24 E2    JMP $E224
+
+13f0  4C 24 E2    JMP $E224 ; Reset the reset vectors and CBM string, continue with standard C64 reset
+
 
 ; //////////// SUBROUTINE 4: SHOW BITMAP VISIBLE AT RESET
 13f3  A9 FF       LDA #$FF
