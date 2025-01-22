@@ -56,7 +56,7 @@
 
 ; Setup common RAM amount (new code)
 1345  A9 48       LDA #$48  ; bin 01.00 10.00: abilita grafica in RAM 1; 1k di ram comune in alto da $FC00
-1347  8D 06 D5    STA $D506 ; RAM configuration register (RCR) - dec 54534 (originale: %04, 00.00 01.00, grafica in RAM 0; 1k di ram comune in basso)
+1347  8D 06 D5    STA $D506 ; RAM configuration register (RCR) - dec 54534 (originale: #$04, 00.00 01.00, grafica in RAM 0; 1k di ram comune in basso)
 
 ; Enable C64 ROM (unchanged w.r.t. original GO64 routine)
 134a  A9 F7       LDA #$F7 : 11.11.01.11  (= 11.11.0x.x1)
@@ -216,9 +216,9 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 1425  8D 20 D0    STA $D020
 1428  AD F2 17    LDA $17F2
 142b  8D 21 D0    STA $D021
-142e  A9 44       LDA #$44 ; **************        #$44 (01.00 01.00) in disassemblato, 46 (01.00 01.10) in caricatore
+142e  A9 44       LDA #$44 ; **************        #$44 (01.00 01.00) in disassemblato, #$46 (01.00 01.10) in caricatore
 ; grafica in ram 1; 1k in comune in basso (con $44 sarebbero 8k)
-1430  8D 06 D5    STA $D506 ; dec 54534 (originale: %04, 00.00 01.00)
+1430  8D 06 D5    STA $D506 ; dec 54534 (originale: #$04, 00.00 01.00)
 1433  60          RTS
 
 
@@ -293,7 +293,7 @@ grafica e per cambiare banco video...
 
 ; ////  TRANSFER AND SAVE
 1509  A9 04       LDA #$04  ; bin 00.00 01.00 - banco 0, ram comune in basso
-150b  8D 06 D5    STA $D506 ; dec 54534  (original value: %04, 0000.0010)
+150b  8D 06 D5    STA $D506 ; dec 54534  (original value: #$04, 0000.0010)
 
 ; store $4000 in $FA+$FB
 150e  A9 00       LDA #$00
