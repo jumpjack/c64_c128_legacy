@@ -1,8 +1,11 @@
-; ------ ROUTINE STARTED BY BASIC LOADER  (SYS 4864)
-; ------  Copy $27 (=39) bytes (shouldn't they be 36?) from $132e (hacked GO64 routiner) to $2000 (memory area preserved after reset),
-; ------  and jump to the routine itself.
+ ---------------
+ 
+ **ROUTINE STARTED BY BASIC LOADER  (SYS 4864)**
+ 
+ Copy $27 (=39) bytes (shouldn't they be 36?) from $132e (hacked GO64 routiner) to $2000 (memory area preserved after reset), and jump to the routine itself.
 
-; ========= Store address $2000 of hacked GO64 routine in $FA+$FB  ========
+**Store address $2000 of hacked GO64 routine in $FA+$FB**
+```
 1300  A9 00       LDA #$00
 1302  85 FA       STA $FA
 1304  A9 20       LDA #$20
@@ -10,8 +13,10 @@
 
 1308  A9 FA       LDA #$FA  ; Store pointer to $FA+$FB 
 130a  8D B9 02    STA $02B9 ; in zero page, for $FF77 indrect STA
+```
 
-; FOR Y = 0 to 39 : POKE $2000+Y, PEEK($132E+Y)
+**Equivalent code: FOR Y = 0 to 39 : POKE $2000+Y, PEEK($132E+Y) : NEXT**
+```
 130d  A0 00       LDY #$00 ; intial offset for indrect STA
 130f  B9 2E 13    LDA $132E,Y
 1312  A2 01       LDX #$01 ; set bank number for indrect STA
@@ -19,11 +24,12 @@
 1317  C8          INY
 1318  C0 27       CPY #$27 
 131a  D0 F3       BNE $130F
-; ... NEXT
 
 131c  20 24 E2    JSR $E224 ; Initialize the soft reset vector
+```
 
-;  Jump to $2000 in bank 1, where hacked GO64 routine is stored
+**Long jump  to $2000 in bank 1, where hacked GO64 routine is stored**
+```
 131f  A9 01       LDA #$01 ; Destination bank
 1321  A0 20       LDY #$20 ; high address
 1323  A2 00       LDX #$00 ; low address
@@ -31,15 +37,15 @@
 1327  84 03       STY $03
 1329  86 04       STX $04
 132b  4C 71 FF    JMP $FF71 ; JMPFAR: jumps to address Y+X in bank A
-===========================
+```
 
+---------------
 
-; //////// HACKED "GO 64" routine (36 bytes long)
+**HACKED "GO 64" routine (36 bytes long)**
+```
 ; Disable BASIC and Kernal, Set $4000-$FFFF as RAM ($D000-$DFFF: I/O)
 132e  A9 7E       LDA #$7E   ; 0111.1110 (LDA #$00 in original GO64 routine = BASIC + KERNAL + I/O)
 1330  8D 00 FF    STA $FF00  ; CONFIGURATION REGISTER (CR)
-
-
 
 
 ; Hijack reset pointer to custom routine located at $13c7 rather than $e224, so SYS 64738 ($FCE2) will jump there:
@@ -59,15 +65,18 @@
 1347  8D 06 D5    STA $D506 ; RAM configuration register (RCR) - dec 54534 (originale: #$04, 00.00 01.00, grafica in RAM 0; 1k di ram comune in basso)
 
 ; Enable C64 ROM (unchanged w.r.t. original GO64 routine)
-134a  A9 F7       LDA #$F7 : 11.11.01.11  (= 11.11.0x.x1)
-134c  8D 05 D5    STA $D505: enable 8502 and C64 mode at startup
+134a  A9 F7       LDA #$F7  ; 11.11.01.11  (= 11.11.0x.x1)
+134c  8D 05 D5    STA $D505 ; enable 8502 and C64 mode at startup
 
 134f  4C E2 FC    JMP $FCE2  ; SYS 64738   (Commodore 64 standard reset, but hijacked to $13c7)
 
+```
 
+---------------
 
+**Original GO64 routine**
 
-;;;;;;;;;;;;;; Original GO64 routine ;;;;;;;;;;;;;;;;
+```
 ; Configure locations $00 and $01
 E24B: A9 E3	    LDA #$E3
 E24D: 85 01	    STA $01
@@ -82,16 +91,19 @@ E25A: CA	      DEX
 E25B: D0 F8	    BNE $E255
 
 E25D: 8E 30 D0	STX $D030
-E260: 4C 02 00	JMP $02	; Bank Number, Jump to SYS Address
+E260: 4C 02 00	JMP $02
 
 ; Code copied to $02 (8 bytes)
-E263: A9 F7	    LDA #$F7
-E265: 8D 05 D5	STA $D505
+E263: A9 F7	    LDA #$F7  ; 11.11.01.11  (= 11.11.0x.x1)
+E265: 8D 05 D5	STA $D505 ; enable 8502 and C64 mode at startup
 E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+```
+
+-----------------
 
 
-;/////////// SUBROUTINE 1: Save color mwemory in user memory ($1800-$1bff, 1024 bytes)
+**SUBROUTINE 1: Save color memory in user memory ($1800-$1bff, 1024 bytes)**
+```
 1352  A2 00       LDX #$00
 1354  BD 00 D8    LDA $D800,X
 1357  9D 00 18    STA $1800,X
@@ -104,10 +116,13 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 136c  E8          INX
 136d  D0 E5       BNE $1354
 136f  60          RTS
+```
 
+**SUBROUTINE 2: calculate  pointers to bitmap and to color memory taking into account video bank stored in $17f3, store in page 0**
 
-;/////////// SUBROUTINE 2: calculate  pointers to bitmap and to color memory taking into account video bank stored in $17f3, store in page 0
-; ---- POKE $FA, 3 - PEEK($17f3)
+Equivalent code: POKE $FA, 3 - PEEK($17f3)
+
+```
 1370  AD F3 17    LDA $17F3 ; required bank number
 1373  29 03       AND #$03
 1375  85 FA       STA $FA 
@@ -133,11 +148,13 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 138f  85 FD       STA $FD
 
 1391  AD F0 17    LDA $17F0 ; Contents of $D018 at reset
-1394  29 08       AND #$08  ; check bit 3
+1394  29 08       AND #$08  ; check bit 3 (= bitmap address: 0: bank address + $0000, 1: bank address + $2000) ( https://sta.c64.org/cbm64mem.html )
 1396  F0 0E       BEQ $13A6 ; bit = 0 --> $13a6
                             ; bit = 1: bitmap address is located at $2000 + bank address
 
-; $FE+$FF = $2000 + BANK*$4000
+**Set $FE+$FF pointer to (bit3 * $2000) + (BANK * $4000)**
+
+
 1398  A9 00       LDA #$00  
 139a  18          CLC
 139b  65 FA       ADC $FA
@@ -146,6 +163,7 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 13a1  18          CLC
 13a2  65 FB       ADC $FB
 13a4  85 FD       STA $FD
+
 13a6  AD F0 17    LDA $17F0
 13a9  29 F0       AND #$F0
 13ab  85 FE       STA $FE
@@ -164,9 +182,12 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 13c2  65 FB       ADC $FB
 13c4  85 FF       STA $FF
 13c6  60          RTS
+```
 
+------------
 
-; ///////// ROUTINE EXECUTED AT RESET: SYS 64738 in C64 mode will jump here
+**NEW ROUTINE EXECUTED AT RESET: SYS 64738 in C64 mode will jump here**
+```
 ; Save registers:
 13c7  AD 18 D0    LDA $D018 ; Pointers to screen map and charset map
 13ca  8D F0 17    STA $17F0
@@ -190,9 +211,12 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 13ee  D0 F6       BNE $13E6
 
 13f0  4C 24 E2    JMP $E224 ; Reset the reset vectors and CBM string, continue with standard C64 reset
+```
 
+----------------
 
-; //////////// SUBROUTINE 4: SHOW BITMAP VISIBLE AT RESET
+**SUBROUTINE 4: SHOW BITMAP VISIBLE AT RESET**
+
 13f3  A9 FF       LDA #$FF
 13f5  85 D8       STA $D8
 13f7  A9 70       LDA #$70
