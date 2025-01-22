@@ -120,28 +120,28 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 
 **SUBROUTINE 2: calculate  pointers to bitmap and to color memory taking into account video bank stored in $17f3, store in page 0**
 
-Equivalent code: POKE $FA, 3 - PEEK($17f3)
+; Equivalent code: POKE $FA, 3 - PEEK($17f3)  - (17f3 is holding bits 0 and 1 of DD00, which specify selected memory bank)
 
 ```
 1370  AD F3 17    LDA $17F3 ; required bank number
-1373  29 03       AND #$03
-1375  85 FA       STA $FA 
-1377  A9 03       LDA #$03
+1373  29 03       AND #$03 ; kill bits 2-7
+1375  85 FA       STA $FA ; save in $FA just bits 0-1
+1377  A9 03       LDA #$03 : Put 3 minus $FA contents in $FA
 1379  38          SEC
 137a  E5 FA       SBC $FA
-137c  85 FA       STA $FA
+137c  85 FA       STA $FA; now $FA contains number to be multiplied by 16384 ($4000) to obtain bank base address
 ; ---- end POKE
 
 ; ---- Multiply bank number (previously strored in $FA) by 16384 (2^14, $4000) by left-shiting it 14 times
 137e  A2 00       LDX #$00
 1380  06 FA       ASL $FA
-1382  26 FB       ROL $FB
+1382  26 FB       ROL $FB ; if $FA is in overflow, the exceeding 1 is stored in bit 0 of $FB, keeping the other bits.
 1384  E8          INX
 1385  E0 0E       CPX #$0E
 1387  D0 F7       BNE $1380
 ; Now $FA+$FB holds the value of selected bank multiplied by 16384 ($4000)
 
-;  Copy such value to $FC+$FD
+;  Copy such value to $FC+$FD for further processing:
 1389  A5 FA       LDA $FA
 138b  85 FC       STA $FC
 138d  A5 FB       LDA $FB
@@ -152,9 +152,7 @@ Equivalent code: POKE $FA, 3 - PEEK($17f3)
 1396  F0 0E       BEQ $13A6 ; bit = 0 --> $13a6
                             ; bit = 1: bitmap address is located at $2000 + bank address
 
-**Set $FE+$FF pointer to (bit3 * $2000) + (BANK * $4000)**
-
-
+; ---- Set $FE+$FF pointer to (bit3 * $2000) + (BANK * $4000)
 1398  A9 00       LDA #$00  
 139a  18          CLC
 139b  65 FA       ADC $FA
@@ -164,19 +162,29 @@ Equivalent code: POKE $FA, 3 - PEEK($17f3)
 13a2  65 FB       ADC $FB
 13a4  85 FD       STA $FD
 
-13a6  AD F0 17    LDA $17F0
+; Calculate color 1 and color 2 address as (peek($d018) and 1111.0000) * #$40  (Shouldn't it be *$0400?)
+
+; Store bits 4-7 in $FE
+13a6  AD F0 17    LDA $17F0 
 13a9  29 F0       AND #$F0
 13ab  85 FE       STA $FE
+
 13ad  A2 00       LDX #$00
-13af  06 FE       ASL $FE
-13b1  26 FF       ROL $FF
+13af  06 FE       ASL $FE ; Multiply by 2
+13b1  26 FF       ROL $FF ; Put exceeding MSB in $FF
 13b3  E8          INX
-13b4  E0 06       CPX #$06
+13b4  E0 06       CPX #$06 ; *2 for 5 times = *32
 13b6  D0 F7       BNE $13AF
+
+; now $FE+$FF contains D018 bits 4-7 multiplied by 32
+
+; ----- Add bank base address to address $FE+$FF
+
 13b8  A5 FE       LDA $FE
 13ba  18          CLC
 13bb  65 FA       ADC $FA
 13bd  85 FE       STA $FE
+
 13bf  A5 FF       LDA $FF
 13c1  18          CLC
 13c2  65 FB       ADC $FB
@@ -187,6 +195,7 @@ Equivalent code: POKE $FA, 3 - PEEK($17f3)
 ------------
 
 **NEW ROUTINE EXECUTED AT RESET: SYS 64738 in C64 mode will jump here**
+
 ```
 ; Save registers:
 13c7  AD 18 D0    LDA $D018 ; Pointers to screen map and charset map
@@ -217,6 +226,7 @@ Equivalent code: POKE $FA, 3 - PEEK($17f3)
 
 **SUBROUTINE 4: SHOW BITMAP VISIBLE AT RESET**
 
+```
 13f3  A9 FF       LDA #$FF
 13f5  85 D8       STA $D8
 13f7  A9 70       LDA #$70
@@ -244,38 +254,56 @@ Equivalent code: POKE $FA, 3 - PEEK($17f3)
 ; grafica in ram 1; 1k in comune in basso (con $44 sarebbero 8k)
 1430  8D 06 D5    STA $D506 ; dec 54534 (originale: #$04, 00.00 01.00)
 1433  60          RTS
+```
 
+----------
 
-;//////// MAIN (sys 5172)
+**MAIN (sys 5172)**
+```
+; black frame and background
 1434  A9 00       LDA #$00
 1436  8D 20 D0    STA $D020
 1439  8D 21 D0    STA $D021
+
+; green text
 143c  A9 05       LDA #$05
 143e  85 F1       STA $F1
+
+; clear screen
 1440  A9 93       LDA #$93
 1442  20 D2 FF    JSR $FFD2
+
+; Move cursor to (0,7):
 1445  A0 00       LDY #$00
 1447  A2 07       LDX #$07
 1449  18          CLC
 144a  20 F0 FF    JSR $FFF0
+
+; Print message contained in subsequent memory area:
 144d  20 7D FF    JSR $FF7D
 
 1450-14b4: 
-premi spazio per entrare in pagina    .. 
-grafica e per cambiare banco video...
+premi spazio per entrare in pagina 
+grafica e per cambiare banco video
 <return> per confermare.
 
+; ----- Wait for SPACE:
 14b5  A5 D4       LDA $D4
 14b7  C9 3C       CMP #$3C
 14b9  D0 FA       BNE $14B5
-14bb  A2 00       LDX #$00 ; ***********************  #$00 in disassemblto, 01 in caricatore
+
+; Copy $17F5-$17F9 to $FA-$FF
+14bb  A2 00       LDX #$00 ; ***********************  #$00 in disassemblto, 01 in caricatore; in $13e4, dove i valori vengono salvati, usa #$00
 14bd  BD F5 17    LDA $17F5,X
 14c0  95 FA       STA $FA,X
 14c2  E8          INX
 14c3  E0 06       CPX #$06
 14c5  D0 F6       BNE $14BD
-14c7  20 F3 13    JSR $13F3
+
+14c7  20 F3 13    JSR $13F3 ; SHOW BITMAP VISIBLE AT RESET
+
 14ca  A0 00       LDY #$00
+
 14cc  A5 D4       LDA $D4
 14ce  C9 01       CMP #$01
 14d0  F0 37       BEQ $1509
@@ -315,7 +343,13 @@ grafica e per cambiare banco video...
 1508  00          BRK
 
 
-; ////  TRANSFER AND SAVE
+```
+
+-------------
+
+**TRANSFER AND SAVE**
+
+```
 1509  A9 04       LDA #$04  ; bin 00.00 01.00 - banco 0, ram comune in basso
 150b  8D 06 D5    STA $D506 ; dec 54534  (original value: #$04, 0000.0010)
 
@@ -474,7 +508,10 @@ grafica e per cambiare banco video...
 
 167a-1687: pic a__________
 
+```
+
 -------------------------------------------------------
+
 ; $D505: mode condiguration register (MCR)
 ; - 0 Select microprocessor: 0 = Z80, 1 = 8502
 ; - 1 Unused
@@ -542,3 +579,30 @@ Bits 4 and 5: $C000-$FFF
 Bits 6 and 7: RAM BANK selection. For the base system of 128K, only bit 6 is significant; bit 7 is not implemented. 
 - 6: 1 = bank 1, 0 = bank 0
 - 7: unused
+
+
+## $d018 (53272)
+
+# Screen memory - bits 4-7 * $0400 ( https://codebase64.org/doku.php?id=base:vicii_memory_organizing )
+
+- $D018 = %0000xxxx -> screenmem is at $0000
+- $D018 = %0001xxxx -> screenmem is at $0400
+- $D018 = %0010xxxx -> screenmem is at $0800
+- $D018 = %0011xxxx -> screenmem is at $0c00
+- $D018 = %0100xxxx -> screenmem is at $1000
+- $D018 = %0101xxxx -> screenmem is at $1400
+- $D018 = %0110xxxx -> screenmem is at $1800
+- $D018 = %0111xxxx -> screenmem is at $1c00
+- $D018 = %1000xxxx -> screenmem is at $2000
+- $D018 = %1001xxxx -> screenmem is at $2400
+- $D018 = %1010xxxx -> screenmem is at $2800
+- $D018 = %1011xxxx -> screenmem is at $2c00
+- $D018 = %1100xxxx -> screenmem is at $3000
+- $D018 = %1101xxxx -> screenmem is at $3400
+- $D018 = %1110xxxx -> screenmem is at $3800
+- $D018 = %1111xxxx -> screenmem is at $3c00
+
+# Bitmap location
+
+- $D018 = %xxxx0xxx -> bitmap is at $0000
+- $D018 = %xxxx1xxx -> bitmap is at $2000
