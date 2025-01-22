@@ -1,7 +1,8 @@
 ; ------ ROUTINE STARTED BY BASIC LOADER  (SYS 4864)
 ; ------  Copy $27 (=39) bytes (shouldn't they be 36?) from $132e (hacked GO64 routiner) to $2000 (memory area preserved after reset),
 ; ------  and jump to the routine itself.
-; Store address $2000 in $FB+$FA:
+
+; ========= Store address $2000 of hacked GO64 routine in $FA+$FB  ========
 1300  A9 00       LDA #$00
 1302  85 FA       STA $FA
 1304  A9 20       LDA #$20
@@ -30,20 +31,21 @@
 1327  84 03       STY $03
 1329  86 04       STX $04
 132b  4C 71 FF    JMP $FF71 ; JMPFAR: jumps to address Y+X in bank A
+===========================
 
 
 ; //////// HACKED "GO 64" routine (36 bytes long)
-; Set RAM 1 for I/O
+; Set RAM 1 e I/O
 132e  A9 7E       LDA #$7E
 1330  8D 00 FF    STA $FF00
 
-; Hijack reset pointer to custom routine located at $13c7, so SYS 64738 will jump there:
+; Hijack reset pointer to custom routine located at $13c7 rather than $e224, so SYS 64738 ($FCE2) will jump there:
 1333  A9 C7       LDA #$C7
 1335  8D F8 FF    STA $FFF8
 1338  A9 13       LDA #$13
 133a  8D F9 FF    STA $FFF9
 
-; reset I/O ports
+; reset I/O ports (unchanged w.r.t. original GO64)
 133d  A9 E3       LDA #$E3
 133f  85 01       STA $01
 1341  A9 2F       LDA #$2F
@@ -51,15 +53,40 @@
 
 ; Setup common RAM amount
 1345  A9 48       LDA #$48  ; bin 01.00 10.00: abilita grafica in RAM 1; 1k di ram comune in alto da $FC00
-1347  8D 06 D5    STA $D506 ; dec 54534 (originale: %04, 00.00 01.00, grafica in RAM 0; 1k di ram comune in basso)
+1347  8D 06 D5    STA $D506 ; RAM configuration register (RCR) - dec 54534 (originale: %04, 00.00 01.00, grafica in RAM 0; 1k di ram comune in basso)
 
 ; Enable C64 ROM
-134a  A9 F7       LDA #$F7
-134c  8D 05 D5    STA $D505
+134a  A9 F7       LDA #$F7 : 11.11.01.11  (= 11.11.0x.x1)
+134c  8D 05 D5    STA $D505: enable 8502 and C64 mode at startup
+
+
+
 
 ; sys 64738 (Commodore 64 standard reset, but hijacked to $13c7)
 134f  4C E2 FC    JMP $FCE2
 
+;;;;;;;;;;;;;; Original GO64 routine ;;;;;;;;;;;;;;;;
+; Configure locations $00 and $01
+E24B: A9 E3	    LDA #$E3
+E24D: 85 01	    STA $01
+E24F: A9 2F	    LDA #$2F
+E251: 85 00    	STA $00
+
+; copy $E263-$E26A to $02-$09
+E253: A2 08	    LDX #$08
+E255: BD 62 E2	LDA $E262,X
+E258: 95 01	    STA $01,X
+E25A: CA	      DEX
+E25B: D0 F8	    BNE $E255
+
+E25D: 8E 30 D0	STX $D030
+E260: 4C 02 00	JMP $02	; Bank Number, Jump to SYS Address
+
+; Code copied to $02 (8 bytes)
+E263: A9 F7	    LDA #$F7
+E265: 8D 05 D5	STA $D505
+E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ;/////////// SUBROUTINE 1: Save color mwemory in user memory ($1800-$1bff, 1024 bytes)
@@ -421,9 +448,18 @@ grafica e per cambiare banco video...
 
 167a-1687: pic a__________
 
+-------------------------------------------------------
+; $D505: mode condiguration register (MCR)
+; - 0 Select microprocessor: 0 = Z80, 1 = 8502
+; - 1 Unused
+; - 2 Unused
+; - 3 fast serial (FSDIR) disk drive control
+; - 4 GAME sense
+; - 5 ROM sense
+; - 6 Select operating system: 0 = C128, 1 = C64
+; - 7 Position of 40/80 key: 1 = key up = 40 cols  (read only)
 
-
-; $d506 explained:
+; $D506: RAM Configuration Register
 ; quantità ram comune: bit 0-1
 ; 00: 1k
 ; 01: 4k
