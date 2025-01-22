@@ -35,9 +35,12 @@
 
 
 ; //////// HACKED "GO 64" routine (36 bytes long)
-; Set RAM 1 e I/O
-132e  A9 7E       LDA #$7E
-1330  8D 00 FF    STA $FF00
+; Disable BASIC and Kernal, Set $4000-$FFFF as RAM ($D000-$DFFF: I/O)
+132e  A9 7E       LDA #$7E   ; 0111.1110 (LDA #$00 in original GO64 routine = BASIC + KERNAL + I/O)
+1330  8D 00 FF    STA $FF00  ; CONFIGURATION REGISTER (CR)
+
+
+
 
 ; Hijack reset pointer to custom routine located at $13c7 rather than $e224, so SYS 64738 ($FCE2) will jump there:
 1333  A9 C7       LDA #$C7
@@ -51,19 +54,18 @@
 1341  A9 2F       LDA #$2F
 1343  85 00       STA $00
 
-; Setup common RAM amount
+; Setup common RAM amount (new code)
 1345  A9 48       LDA #$48  ; bin 01.00 10.00: abilita grafica in RAM 1; 1k di ram comune in alto da $FC00
 1347  8D 06 D5    STA $D506 ; RAM configuration register (RCR) - dec 54534 (originale: %04, 00.00 01.00, grafica in RAM 0; 1k di ram comune in basso)
 
-; Enable C64 ROM
+; Enable C64 ROM (unchanged w.r.t. original GO64 routine)
 134a  A9 F7       LDA #$F7 : 11.11.01.11  (= 11.11.0x.x1)
 134c  8D 05 D5    STA $D505: enable 8502 and C64 mode at startup
 
+134f  4C E2 FC    JMP $FCE2  ; SYS 64738   (Commodore 64 standard reset, but hijacked to $13c7)
 
 
 
-; sys 64738 (Commodore 64 standard reset, but hijacked to $13c7)
-134f  4C E2 FC    JMP $FCE2
 
 ;;;;;;;;;;;;;; Original GO64 routine ;;;;;;;;;;;;;;;;
 ; Configure locations $00 and $01
@@ -482,3 +484,37 @@ grafica e per cambiare banco video...
 
 ; valore necessario: x1xx.00xx
 ; valore originario: 0000.0100
+
+
+$FF00
+- Bank 1
+- $E000-$FFFF: RAM
+- $D000-$DFFF: I/O 
+- $C000-$CFFF: RAM
+- $8000-$BFFF: RAM
+- $4000-$7FFF: RAM
+
+$FF00:
+Bit 0: ($D000 through $DFFF) - The value of bit 0 on power-up is 0.
+- 1: ROM or RAM  (depending upon the values of the ROM HIGH bits (4 and 5) in this register)
+- 0: I/O. 
+
+Bit 1:
+- 1: $4000-$7FFF = RAM
+- 0: $4000-$7FFF = BASIC LOW ROM
+
+Bits 2 and 3: (Upon power-up or reset: 00) - Type of memory $8000-$BFFF. 
+- 11: RAM 
+- 01: INTERNAL FUNCTION ROM
+- 10: EXTERNAL FUNCTION ROM
+- 00: BASIC HIGH ROM.
+
+Bits 4 and 5: $C000-$FFF
+- 11: RAM
+- 01: INTERNAL FUNCTION ROM
+- 10: EXTERNAL FUNCTION ROM
+- 00: Kernal and character ROMs 
+
+Bits 6 and 7: RAM BANK selection. For the base system of 128K, only bit 6 is significant; bit 7 is not implemented. 
+- 6: 1 = bank 1, 0 = bank 0
+- 7: unused
