@@ -1,26 +1,34 @@
 ; ///////// ROUTINE STARTED BY BASIC LOADER  (SYS 4864)
 
+; Store address $2000 in $FB+$FA:
 1300  A9 00       LDA #$00
 1302  85 FA       STA $FA
 1304  A9 20       LDA #$20
 1306  85 FB       STA $FB
-1308  A9 FA       LDA #$FA
-130a  8D B9 02    STA $02B9
-130d  A0 00       LDY #$00
+
+1308  A9 FA       LDA #$FA ; Prepare pointer  to $FA+$FB for $FF77 indrect STA
+130a  8D B9 02    STA $02B9 ; ??
+
+; ------  Copy $27 (=39) bytes from $132e (hacked GO64 routiner) to $2000 (memory area preserved after reset)
+130d  A0 00       LDY #$00 ; intial offset for indrect STA
 130f  B9 2E 13    LDA $132E,Y
-1312  A2 01       LDX #$01
-1314  20 77 FF    JSR $FF77
+1312  A2 01       LDX #$01 ; set bank number for indrect STA
+1314  20 77 FF    JSR $FF77 ;  Indrect STA to bank 1
 1317  C8          INY
-1318  C0 27       CPY #$27
+1318  C0 27       CPY #$27 
 131a  D0 F3       BNE $130F
+; --- end copy loop
+
 131c  20 24 E2    JSR $E224
-131f  A9 01       LDA #$01
-1321  A0 20       LDY #$20
-1323  A2 00       LDX #$00
+
+;  Jump to $2000 in bank 1, where hacked GO64 routine is stored
+131f  A9 01       LDA #$01 ; Destination bank
+1321  A0 20       LDY #$20 ; high address
+1323  A2 00       LDX #$00 ; low address
 1325  85 02       STA $02
 1327  84 03       STY $03
 1329  86 04       STX $04
-132b  4C 71 FF    JMP $FF71
+132b  4C 71 FF    JMP $FF71 ; JMPFAR: jumps to address Y+X in bank A
 
 
 ; //////// HACKED "GO 64" routine
@@ -223,18 +231,21 @@ grafica e per cambiare banco video...
 ; ////  TRANSFER AND SAVE
 1509  A9 04       LDA #$04  ; bin 00.00 01.00 - banco 0, ram comune in basso
 150b  8D 06 D5    STA $D506 ; dec 54534  (original value: %04, 0000.0010)
+
+; store $4000 in $FA+$FB
 150e  A9 00       LDA #$00
 1510  85 FA       STA $FA
 1512  A9 40       LDA #$40
 1514  85 FB       STA $FB
+
 1516  A9 FA       LDA #$FA
 1518  8D B9 02    STA $02B9
 151b  A0 00       LDY #$00
 151d  A2 01       LDX #$01
 151f  A9 FC       LDA #$FC
-1521  20 74 FF    JSR $FF74
+1521  20 74 FF    JSR $FF74 ; indrect LDA from any bank
 1524  A2 00       LDX #$00
-1526  20 77 FF    JSR $FF77
+1526  20 77 FF    JSR $FF77  ;  Indrect STA to any bank
 1529  C8          INY
 152a  D0 F1       BNE $151D
 152c  E6 FB       INC $FB
@@ -242,6 +253,7 @@ grafica e per cambiare banco video...
 1530  A5 FB       LDA $FB
 1532  C9 60       CMP #$60
 1534  D0 E5       BNE $151B
+
 1536  A9 40       LDA #$40
 1538  85 FA       STA $FA
 153a  A9 5F       LDA #$5F
@@ -251,10 +263,9 @@ grafica e per cambiare banco video...
 1543  A0 00       LDY #$00
 1545  A2 01       LDX #$01
 1547  A9 FE       LDA #$FE
-
-1549  20 74 FF    JSR $FF74
+1549  20 74 FF    JSR $FF74 ; indrect LDA from any bank
 154c  A2 00       LDX #$00
-154e  20 77 FF    JSR $FF77
+154e  20 77 FF    JSR $FF77  ;  Indrect STA to any bank
 1551  C8          INY
 1552  D0 F1       BNE $1545
 1554  E6 FB       INC $FB
