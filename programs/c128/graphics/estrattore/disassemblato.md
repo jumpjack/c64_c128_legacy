@@ -120,10 +120,12 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 
 **SUBROUTINE 2: calculate  pointers to bitmap and to color memory taking into account video bank stored in $17f3, store in page 0**
 
-; Equivalent code: POKE $FA, 3 - PEEK($17f3)  - (17f3 is holding bits 0 and 1 of DD00, which specify selected memory bank)
+; FA  FB                FC  FD                         FE  FF
+; bank base address     absolute bitmap address        absolute screen/color address
 
 ```
-1370  AD F3 17    LDA $17F3 ; required bank number (copy of $DD00; $97 for "CAPTURED!" splash screen?)
+; Equivalent code: POKE $FA, 3 - PEEK($17f3)  - (17f3 contains bits 0 and 1 to be stored in  DD00 to select memory bank)
+1370  AD F3 17    LDA $17F3 ; required bank number ($95/1001.0101 for "CAPTURED!" splash screen -> $8000, $14/0001.0100 for text-mode rooms --> $C000)
 1373  29 03       AND #$03 ; kill bits 2-7
 1375  85 FA       STA $FA ; save in $FA just bits 0-1
 1377  A9 03       LDA #$03 ; Put 3 minus $FA contents in $FA
