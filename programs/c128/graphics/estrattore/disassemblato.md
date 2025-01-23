@@ -633,7 +633,9 @@ Spiegazione:
 
 # $d018 (53272)
 
-# Screen memory - bits 4-7 * $0400 ( https://codebase64.org/doku.php?id=base:vicii_memory_organizing )
+Reference: https://codebase64.org/doku.php?id=base:vicii_memory_organizing
+
+## "Screen memory" / "bitmap colors" - bits 7-4 (value * $0400) 
 
 - $D018 = %0000xxxx -> screenmem is at $0000
 - $D018 = %0001xxxx -> screenmem is at $0400
@@ -652,10 +654,21 @@ Spiegazione:
 - $D018 = %1110xxxx -> screenmem is at $3800
 - $D018 = %1111xxxx -> screenmem is at $3c00
 
-# Bitmap location - bit 3
+## Bitmap mode: Bitmap location - bit 3  (value * $2000)
 
 - $D018 = %xxxx0xxx -> bitmap is at $0000
 - $D018 = %xxxx1xxx -> bitmap is at $2000
+
+## Text mode: Character set location - bits 3-1  (value * $0800)
+
+- $D018 = %xxxx000x -> charmem is at $0000
+- $D018 = %xxxx001x -> charmem is at $0800
+- $D018 = %xxxx010x -> charmem is at $1000
+- $D018 = %xxxx011x -> charmem is at $1800
+- $D018 = %xxxx100x -> charmem is at $2000
+- $D018 = %xxxx101x -> charmem is at $2800
+- $D018 = %xxxx110x -> charmem is at $3000
+- $D018 = %xxxx111x -> charmem is at $3800
 
 ----------
 
