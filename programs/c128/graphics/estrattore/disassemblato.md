@@ -227,10 +227,13 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 **SUBROUTINE 4: SHOW BITMAP VISIBLE AT RESET**
 
 ```
-13f3  A9 FF       LDA #$FF
+; set graphic mode 
+13f3  A9 FF       LDA #$FF ; graphic mode 4 
 13f5  85 D8       STA $D8
+
 13f7  A9 70       LDA #$70
 13f9  85 01       STA $01
+
 13fb  A2 00       LDX #$00
 13fd  BD 00 18    LDA $1800,X
 1400  9D 00 D8    STA $D800,X
@@ -242,13 +245,15 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 1412  9D 00 DB    STA $DB00,X
 1415  E8          INX
 1416  D0 E5       BNE $13FD
-1418  A9 A0       LDA #$A0
+
+1418  A9 A0       LDA #$A0 ; 1010.0000 - graphic mode 3
 141a  85 D8       STA $D8
-141c  AD F0 17    LDA $17F0
-141f  8D 2D 0A    STA $0A2D
-1422  AD F1 17    LDA $17F1
+
+141c  AD F0 17    LDA $17F0 ; contents ofd $d018
+141f  8D 2D 0A    STA $0A2D 
+1422  AD F1 17    LDA $17F1 ; contents of $d020
 1425  8D 20 D0    STA $D020
-1428  AD F2 17    LDA $17F2
+1428  AD F2 17    LDA $17F2 ; contents of $d021
 142b  8D 21 D0    STA $D021
 142e  A9 44       LDA #$44 ; **************        #$44 (01.00 01.00) in disassemblato, #$46 (01.00 01.10) in caricatore
 ; grafica in ram 1; 1k in comune in basso (con $44 sarebbero 8k)
@@ -651,3 +656,16 @@ Spiegazione:
 
 - $D018 = %xxxx0xxx -> bitmap is at $0000
 - $D018 = %xxxx1xxx -> bitmap is at $2000
+
+----------
+
+# $D8 	-  Graphics mode code 
+
+Reference: https://klasek.at/c64/c128-rom-listing.html
+
+- BITS 7,6,5:
+   -   000=0 (000x.xxxx)
+   -   001=1 (001x.xxxx)
+   -   011=2 (011x.xxxx)
+   -   101=3 (101x.xxxx)
+   -   111=4 (111x.xxxx)
