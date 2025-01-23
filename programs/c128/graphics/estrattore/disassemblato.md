@@ -123,10 +123,10 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 ; Equivalent code: POKE $FA, 3 - PEEK($17f3)  - (17f3 is holding bits 0 and 1 of DD00, which specify selected memory bank)
 
 ```
-1370  AD F3 17    LDA $17F3 ; required bank number
+1370  AD F3 17    LDA $17F3 ; required bank number (copy of $DD00; $97 for "CAPTURED!" splash screen?)
 1373  29 03       AND #$03 ; kill bits 2-7
 1375  85 FA       STA $FA ; save in $FA just bits 0-1
-1377  A9 03       LDA #$03 : Put 3 minus $FA contents in $FA
+1377  A9 03       LDA #$03 ; Put 3 minus $FA contents in $FA
 1379  38          SEC
 137a  E5 FA       SBC $FA
 137c  85 FA       STA $FA; now $FA contains number to be multiplied by 16384 ($4000) to obtain bank base address
@@ -165,7 +165,7 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 ; Calculate color 1 and color 2 address as (peek($d018) and 1111.0000) * #$40  (Shouldn't it be *$0400?)
 
 ; Store bits 4-7 in $FE
-13a6  AD F0 17    LDA $17F0 
+13a6  AD F0 17    LDA $17F0 ; (copy of $d018; =$38 for "CAPTURED!" splash screen)
 13a9  29 F0       AND #$F0
 13ab  85 FE       STA $FE
 
