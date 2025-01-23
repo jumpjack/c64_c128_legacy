@@ -152,7 +152,7 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 1396  F0 0E       BEQ $13A6 ; bit = 0 --> $13a6
                             ; bit = 1: bitmap address is located at $2000 + bank address
 
-; ---- Set $FE+$FF pointer to (bit3 * $2000) + (BANK * $4000)
+; Add $2000 to $FA+$FB address, store in $FC+$FD
 1398  A9 00       LDA #$00  
 139a  18          CLC
 139b  65 FA       ADC $FA
@@ -162,23 +162,30 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 13a2  65 FB       ADC $FB
 13a4  85 FD       STA $FD
 
-; Calculate color 1 and color 2 address as (peek($d018) and 1111.0000) * #$40  (Shouldn't it be *$0400?)
 
-; Store bits 4-7 in $FE
-13a6  AD F0 17    LDA $17F0 ; (copy of $d018; =$38 for "CAPTURED!" splash screen)
-13a9  29 F0       AND #$F0
+; ------- Calculate color 1 and color 2 address as (peek($d018) and 1111.0000) * dec 64:
+; ------- High nibble value is is like lownibble value*16, i.e.
+; ------- 0011.0000 = 0000.0011*16 (i.e.  shifted left 4 times);
+; ------- Hence, shifting high nibble to left 6 more times is like multipling the low-nibble value 0011
+; ------- by 64x16 = 1024 = $0400
+
+; Store $d018 contents in $FE turning off low nibble, hence keeping only bits 4-7
+13a6  AD F0 17    LDA $17F0 ; (copy of $d018; = $38 / 0011.1000 for "CAPTURED!" splash screen)
+13a9  29 F0       AND #$F0  ; remains 0011.0000
 13ab  85 FE       STA $FE
 
+; Multiply by 64 (6 shifts left with carry)
 13ad  A2 00       LDX #$00
-13af  06 FE       ASL $FE ; Multiply by 2
-13b1  26 FF       ROL $FF ; Put exceeding MSB in $FF
+13af  06 FE       ASL $FE ; Shift left (=x2);
+13b1  26 FF       ROL $FF ; if 1 "exits" to left, put it in bit 0 of $FF while shifting left $FF
 13b3  E8          INX
-13b4  E0 06       CPX #$06 ; *2 for 5 times = *32
+13b4  E0 06       CPX #$06 ; *2 for 6 times = *64
 13b6  D0 F7       BNE $13AF
 
-; now $FE+$FF contains D018 bits 4-7 multiplied by 32
+; now $FE+$FF contains value of D018 bits 4-7 multiplied by 1024/$0400, which is offset
+; of screen memory / color memory w.r.t.  bank base address.
 
-; ----- Add bank base address to address $FE+$FF
+; ----- Add bank base address stored in $FA+$FB to address stored in $FE+$FF
 
 13b8  A5 FE       LDA $FE
 13ba  18          CLC
@@ -189,6 +196,11 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 13c1  18          CLC
 13c2  65 FB       ADC $FB
 13c4  85 FF       STA $FF
+
+; final contents:
+; FA  FB                FC  FD                         FE  FF
+; bank base address     absolute bitmap address        absolute screen/color address
+
 13c6  60          RTS
 ```
 
