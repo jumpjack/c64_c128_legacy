@@ -487,7 +487,7 @@ grafica e per cambiare banco video
 1620  F0 08       BEQ $162A
 1622  99 D7 17    STA $17D7,Y
 1625  C8          INY
-1626  C0 0A       CPY #$09
+1626  C0 09       CPY #$09  ; corretto a penna in# $0A nel disassemblato sulla rivista
 1628  30 F1       BMI $161B
 162a  A9 13       LDA #$13
 162c  20 D2 FF    JSR $FFD2
