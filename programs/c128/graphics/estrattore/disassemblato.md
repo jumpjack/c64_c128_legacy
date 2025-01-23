@@ -134,7 +134,8 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 137c  85 FA       STA $FA; now $FA contains number to be multiplied by 16384 ($4000) to obtain bank base address
 ; ---- end POKE
 
-; ---- Multiply bank number (previously strored in $FA) by 16384 (2^14, $4000) by left-shiting it 14 times
+; ---- Multiply bank number (previously strored in $FA) by 16384 (2^14, $4000) by left-shifting it 14 times
+; ---- to calculate bank base address, which is then stored in $FA+$FB.
 137e  A2 00       LDX #$00
 1380  06 FA       ASL $FA
 1382  26 FB       ROL $FB ; if $FA is in overflow, the exceeding 1 is stored in bit 0 of $FB, keeping the other bits.
