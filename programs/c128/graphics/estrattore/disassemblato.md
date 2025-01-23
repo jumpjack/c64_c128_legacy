@@ -517,38 +517,49 @@ grafica e per cambiare banco video
 Reference: https://www.commodore.ca/manuals/funet/cbm/documents/projects/memory/c128/1028/1028.html
 
 ## $D505: mode configuration register (MCR)
-- 0 Select microprocessor: 0 = Z80, 1 = 8502
-- 1 Unused
-- 2 Unused
-- 3 fast serial (FSDIR) disk drive control
-- 4 GAME sense
-- 5 ROM sense
-- 6 Select operating system: 0 = C128, 1 = C64
+
+Reference: https://www.commodore.ca/manuals/funet/cbm/documents/projects/memory/c128/1028/1028.html
+
+Set to #$F7 / 11.11.01.11 (no changes)
+
 - 7 Position of 40/80 key: 1 = key up = 40 cols  (read only)
+- **6 Select operating system: 0 = C128, 1 = C64**
+- 5 ROM sense
+- 4 GAME sense
+- 3 fast serial (FSDIR) disk drive control
+- 2 Unused
+- 1 Unused
+- **0 Select microprocessor: 0 = Z80, 1 = 8502**
 
 ------------
 
-## $D506: RAM Configuration Register
+# $D506 (54534): RAM Configuration Register
 
-( valore originario: 0000.0100 ,  valore necessario per estrattore: x1xx.00xx  ???)
+Reference: https://www.commodore.ca/manuals/funet/cbm/documents/projects/memory/c128/1028/1028.html
 
+- Original:      #$04 / 00.00 01.00: graphics in RAM 0; 1k common ram, low
+- Hacked:        #$48 / 01.00 10.00: graphics in RAM 1; 1k common RAM, high  (set in hacked GO64 routine)
+- Hacked2:       #$44 / 01.00 01.00: graphics in RAM 1; 1k common ram, low (image viewer)   
+- In loader:     #$46 / 01.00 01.10: graphics in RAM 1; 8k common ram, low (error in BASIC loader?) 
+- Transfer/save: #$04 / 00.00 01.00: original value
+  
 ## bit 7
 - non usato
 
 ## bit 6:
- - 0: grafica in ram 0
- - 1: grafica in ram 1
+ - 0: graphics in RAM 0
+ - 1: graphics in RAM 1
 
 ## bit 4-5:
-- non usati
+- not used
 
-## posizione ram comune: bit 2-3
+## commonm RAM position: bit 3-2
  - 00: no
- - 01: in basso
- - 10: in alto
- - 11: entrambi
+ - 01: low
+ - 10: high
+ - 11: both
 
-## quantità ram comune: bit 0-1
+## common RAM quantity: bit 1-0
  - 00: 1k
  - 01: 4k
  - 10: 8k
@@ -559,19 +570,22 @@ Reference: https://www.commodore.ca/manuals/funet/cbm/documents/projects/memory/
 
 # $FF00 (MOS 8722 MMU Configuration Register)
 
+Reference: [Commodore 128 Personal Computer Programmer's Reference Guide, p.460-461](https://archive.org/details/commodore-128-programmer-ref/page/n471/mode/2up)
+
 Impostato da estrattore a 0111.1110 ($7e, 126)
 
 ```
 7654.3210
 0111.1110
-||||.||||--- 0: I/O
-||||.|||---- 1: $4000-$7FFF: RAM
-||||.||----- 1: $8000-$BFFF: RAM
-||||.|------ 1: "
-||||.------- 1: $C000-$CFFF: RAM
-|||-.------- 1: "
-||--.------- 1: Bank 1
-|---.------- xxxx
+|||| ||||--- 0: $D000-$DFFF: I/O 
+|||| |||---- 1: $4000-$7FFF: RAM
+|||| ||----- 1: $8000-$BFFF: RAM
+|||| |------ 1: "
+||||
+||||-------- 1: $C000-$CFFF - $E000-$FFFF: RAM
+|||--------- 1: "
+||---------- 1: Bank 1
+|----------- xxxx
 ```
 
 - $E000-$FFFF: RAM
@@ -612,7 +626,7 @@ Spiegazione:
 
 
 
-## $d018 (53272)
+# $d018 (53272)
 
 # Screen memory - bits 4-7 * $0400 ( https://codebase64.org/doku.php?id=base:vicii_memory_organizing )
 
