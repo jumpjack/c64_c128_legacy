@@ -512,73 +512,104 @@ grafica e per cambiare banco video
 
 -------------------------------------------------------
 
-; $D505: mode condiguration register (MCR)
-; - 0 Select microprocessor: 0 = Z80, 1 = 8502
-; - 1 Unused
-; - 2 Unused
-; - 3 fast serial (FSDIR) disk drive control
-; - 4 GAME sense
-; - 5 ROM sense
-; - 6 Select operating system: 0 = C128, 1 = C64
-; - 7 Position of 40/80 key: 1 = key up = 40 cols  (read only)
+# Registers
 
-; $D506: RAM Configuration Register
-; quantità ram comune: bit 0-1
-; 00: 1k
-; 01: 4k
-; 10: 8k
-; 11: 16k
+Reference: https://www.commodore.ca/manuals/funet/cbm/documents/projects/memory/c128/1028/1028.html
 
-; ram comune: bit 2-3
-; 00: no
-; 01: in basso
-; 10: in alto
-; 11: entrambi
+## $D505: mode configuration register (MCR)
+- 0 Select microprocessor: 0 = Z80, 1 = 8502
+- 1 Unused
+- 2 Unused
+- 3 fast serial (FSDIR) disk drive control
+- 4 GAME sense
+- 5 ROM sense
+- 6 Select operating system: 0 = C128, 1 = C64
+- 7 Position of 40/80 key: 1 = key up = 40 cols  (read only)
 
-; bit 4-5: non usati
+------------
 
-; bit 6:
-: 0: grafica in ram 0
-; 1: grafica in ram 1
+## $D506: RAM Configuration Register
 
-; bit 7: non usato
+( valore originario: 0000.0100 ,  valore necessario per estrattore: x1xx.00xx  ???)
 
-; valore necessario: x1xx.00xx
-; valore originario: 0000.0100
+## bit 7
+- non usato
+
+## bit 6:
+ - 0: grafica in ram 0
+ - 1: grafica in ram 1
+
+## bit 4-5:
+- non usati
+
+## posizione ram comune: bit 2-3
+ - 00: no
+ - 01: in basso
+ - 10: in alto
+ - 11: entrambi
+
+## quantità ram comune: bit 0-1
+ - 00: 1k
+ - 01: 4k
+ - 10: 8k
+ - 11: 16k
+
+-----------
 
 
-$FF00
-- Bank 1
+# $FF00 (MOS 8722 MMU Configuration Register)
+
+Impostato da estrattore a 0111.1110 ($7e, 126)
+
+```
+7654.3210
+0111.1110
+||||.||||--- 0: I/O
+||||.|||---- 1: $4000-$7FFF: RAM
+||||.||----- 1: $8000-$BFFF: RAM
+||||.|------ 1: "
+||||.------- 1: $C000-$CFFF: RAM
+|||-.------- 1: "
+||--.------- 1: Bank 1
+|---.------- xxxx
+```
+
 - $E000-$FFFF: RAM
 - $D000-$DFFF: I/O 
 - $C000-$CFFF: RAM
 - $8000-$BFFF: RAM
 - $4000-$7FFF: RAM
 
-$FF00:
-Bit 0: ($D000 through $DFFF) - The value of bit 0 on power-up is 0.
-- 1: ROM or RAM  (depending upon the values of the ROM HIGH bits (4 and 5) in this register)
-- 0: I/O. 
+Spiegazione:
 
-Bit 1:
-- 1: $4000-$7FFF = RAM
-- 0: $4000-$7FFF = BASIC LOW ROM
+## Bit 7:
+- unused
 
-Bits 2 and 3: (Upon power-up or reset: 00) - Type of memory $8000-$BFFF. 
-- 11: RAM 
-- 01: INTERNAL FUNCTION ROM
-- 10: EXTERNAL FUNCTION ROM
-- 00: BASIC HIGH ROM.
+## Bit 6: RAM BANK selection
+- 0: bank 0
+- 1: bank 1
 
-Bits 4 and 5: $C000-$FFF
+## Bits 4 and 5  ($C000-$FFF)
 - 11: RAM
 - 01: INTERNAL FUNCTION ROM
 - 10: EXTERNAL FUNCTION ROM
 - 00: Kernal and character ROMs 
 
-Bits 6 and 7: RAM BANK selection. For the base system of 128K, only bit 6 is significant; bit 7 is not implemented. 
-- 6: 1 = bank 1, 0 = bank 0
-- 7: unused
+## Bits 2 and 3 ($8000-$BFFF) (Upon power-up or reset: 00, BASIC enabled)  
+- 11: RAM 
+- 01: INTERNAL FUNCTION ROM
+- 10: EXTERNAL FUNCTION ROM
+- 00: BASIC HIGH ROM.
+
+## Bit 1 ($4000-$7FFF)  (Upon power-up or reset: 00, BASIC enabled)  
+- 1: RAM
+- 0: BASIC LOW ROM
+
+## Bit 0 ($D000 - $DFFF) -  (Upon power-up or reset: 0, I/O enabled)
+- 1: ROM or RAM  (depending upon the values of the ROM HIGH bits (4 and 5) in this register)
+- 0: I/O. 
+
+
 
 
 ## $d018 (53272)
@@ -602,7 +633,7 @@ Bits 6 and 7: RAM BANK selection. For the base system of 128K, only bit 6 is sig
 - $D018 = %1110xxxx -> screenmem is at $3800
 - $D018 = %1111xxxx -> screenmem is at $3c00
 
-# Bitmap location
+# Bitmap location - bit 3
 
 - $D018 = %xxxx0xxx -> bitmap is at $0000
 - $D018 = %xxxx1xxx -> bitmap is at $2000
