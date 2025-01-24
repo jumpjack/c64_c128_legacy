@@ -1,5 +1,10 @@
 ![image](https://github.com/user-attachments/assets/884a9489-6864-44ab-b88c-bb9c7893e10a)
 
+-  [Immagine disco](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/extractor.d64) del caricatore BASIC
+-  [File LM ](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/binary.prg) già pronto per caricamento in RAM
+-  [Listato basic](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/extract128.prg) in formato PRG
+
+
 Programma veramente complesso che utilizzava il commodore 128 in modo molto intrigante, come se fosse
 in realtà una cartuccia hardware collegata al commodore 64, di quelle che si usavano per bloccare l'esecuzione
 dei giochi in modo da poter accedere alla RAM, modificarla per "barare", o leggerla per salvare immagini e sprite.
