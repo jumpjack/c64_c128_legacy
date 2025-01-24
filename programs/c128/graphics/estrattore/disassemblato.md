@@ -166,7 +166,10 @@ E268  6C FC FF  JMP ($FFFC); RESET: jump to  $fce2 (64738)        134f  4C E2 FC
 ---------------
 
 
-# SUBROUTINE 1: Save color memory in user memory ($1800-$1bff, 1024 bytes)
+# SUBROUTINE 1
+
+Save color memory in user memory ($1800-$1bff, 1024 bytes)
+
 ```
 1352  A2 00       LDX #$00
 1354  BD 00 D8    LDA $D800,X
@@ -184,12 +187,17 @@ E268  6C FC FF  JMP ($FFFC); RESET: jump to  $fce2 (64738)        134f  4C E2 FC
 
 ---------------
 
-# SUBROUTINE 2: calculate  pointers to bitmap and to color memory taking into account video bank stored in $17f3, store in page 0
+# SUBROUTINE 2
 
-; FA  FB                FC  FD                         FE  FF
-; bank base address     absolute bitmap address        absolute screen/color address
+Calculate pointers to bitmap and to color memory taking into account video bank stored in $17f3, store from $FA
 
 ```
+; FA  FB                FC  FD                         FE  FF
+; bank base address     absolute bitmap address        absolute screen/color address
+```
+
+```
+
 ; Equivalent code: POKE $FA, 3 - PEEK($17f3)  - (17f3 contains bits 0 and 1 to be stored in  DD00 to select memory bank)
 1370  AD F3 17    LDA $17F3 ; required bank number ($95/1001.0101 for "CAPTURED!" splash screen -> $8000, $14/0001.0100 for text-mode rooms --> $C000)
 1373  29 03       AND #$03 ; kill bits 2-7
@@ -275,7 +283,14 @@ E268  6C FC FF  JMP ($FFFC); RESET: jump to  $fce2 (64738)        134f  4C E2 FC
 
 ------------
 
-# NEW ROUTINE EXECUTED AT RESET: SYS 64738 in C64 mode will jump here
+# NEW ROUTINE EXECUTED AT RESET
+
+SYS 64738 in C64 mode will jump here.
+- SAVE $D018 register (pointers to screen/color map and charset map) in $17f0
+- Save frame and background color in $17f1, $17f2
+- Save initial bank number 0 in $17f3
+- Save pointers to bitmap and colors in user ram from $17f5 to $17f9
+- Save bitmap color memory from $1800 to $1bff
 
 ```
 ; Save registers:
@@ -305,7 +320,9 @@ E268  6C FC FF  JMP ($FFFC); RESET: jump to  $fce2 (64738)        134f  4C E2 FC
 
 ----------------
 
-# SUBROUTINE 4: SHOW BITMAP VISIBLE AT RESET
+# SUBROUTINE 4
+
+SHOW BITMAP VISIBLE AT RESET
 
 ```
 ; set graphic mode 
@@ -345,7 +362,12 @@ E268  6C FC FF  JMP ($FFFC); RESET: jump to  $fce2 (64738)        134f  4C E2 FC
 ---------------
 
 
-# MAIN (sys 5172, to be manually called by user after coming back from C64 mode to C128 mode)
+# MAIN 
+
+To be manually called with sys 5172 by user after coming back from C64 mode to C128 mode.
+- Show some messages
+- Cycle throug 4 bitmaps with SPACE, until RETURN is pressed
+- Save selected image to disk in KOALA format and exit.
 
 ```
 ; black frame and background
