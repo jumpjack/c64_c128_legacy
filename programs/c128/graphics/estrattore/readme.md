@@ -38,21 +38,11 @@ L'immagine qui sotto evidenzia alcuni errori individuati nel codice:
 
 Solo sostituendo il 46, lo 01 e lo 0a con 44, 00 e 09 il programma viene eseguito correttamente senza indicare un errore nei DATA.
 
-I primi 2 errori si desumono dal disassemblato commentato; lo 0a da sostituire con 09 è una correzione a penna scritta sul disassemblato pubblicato sulla rivista.
+I primi 2 errori si desumono dal disassemblato commentato; lo 0a da sostituire con 09 è invece una correzione a penna (!) scritta sul disassemblato pubblicato sulla rivista, non saprei dire se fatto dall'editore o dal proprietario della rivita che è stata poi scansionata.
 
-Correggendo questi errori, il listato si compila senza indicare errori nei DATA, tuttavia, anche i risultati non sono ottimali: la mappa colore non è individuata correttamente:
+Correggendo questi errori, il listato si compila senza indicare errori nei DATA; tuttavia, i risultati ottenuti sono diversi a seconda dell'emulatore utilizzato: pare che VICE, almeno fino alla versione 3.9, abbia problemi con la gestione del VIC, per cui con questo tool non  si riesce a salvare correttamente la mappa-colore, cosa che invece riesce con l'emulatore [Z64K](https://www.facebook.com/RetroMagazineWorld/posts/z64kemulatore-jav-pixel-perfect-di-commodore-64-commodore-128-spectrum-48128k-vi/872089538267970/), che vanta nelle specifiche una "altissima fedeltà" al C128 reale:
 
-Originale
-
-<img width="313" alt="image" src="https://github.com/user-attachments/assets/024a7838-8490-4990-b08d-0be11d2619fb" />
-
-Estratta
-
-<img width="307" alt="image" src="https://github.com/user-attachments/assets/62e7d8d6-4228-4952-858a-e4a8ce4c36ac" />
-
-
-**Verifiche in corso...  Dovrò ristudiarmi tutto il meccanismo di memorizzazione delle immagini in C64 e C128....**
-
+<img width="400" alt="image" src="https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/confronto-splashscreen.jpg?raw=true">
 
 Nel disassemblato commentato è presente un ulteriore errore:
 
@@ -81,6 +71,11 @@ In questo caso perà si tratta solo di un errore di battitura, non ha effetto su
 ## Con annotazioni grafiche mie
 
 <img width="560" alt="image" src="https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/disassemblato.jpg" />
+
+## Formato testo
+
+[Link](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/disassemblato.md)
+
 
 ## Ricavato da caricatore BASIC in emulatore
 
