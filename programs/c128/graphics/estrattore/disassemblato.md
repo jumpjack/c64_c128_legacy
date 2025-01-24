@@ -1,10 +1,10 @@
  ---------------
  
- **ROUTINE STARTED BY BASIC LOADER  (SYS 4864)**
+# ROUTINE STARTED BY BASIC LOADER  (SYS 4864)
  
  Copy $27 (=39) bytes (shouldn't they be 36?) from $132e (hacked GO64 routiner) to $2000 (memory area preserved after reset), and jump to the routine itself.
 
-**Store address $2000 of hacked GO64 routine in $FA+$FB**
+**Store address $2000 of hacked GO64 routine in $FA+$FB, for usage with for-next loop which copies there the hacked GO64 routine**
 ```
 1300  A9 00       LDA #$00
 1302  85 FA       STA $FA
@@ -15,8 +15,22 @@
 130a  8D B9 02    STA $02B9 ; in zero page, for $FF77 indrect STA
 ```
 
-**Equivalent code: FOR Y = 0 to 39 : POKE $2000+Y, PEEK($132E+Y) : NEXT**
+
+Equivalent meta-code of following ASM part:
 ```
+FOR Y = 0 to 38 : POKE $2000+Y, PEEK($132E+Y) : NEXT
+```
+or
+
+```
+for (Y=0; Y<$27; Y++) {
+  ($2000+Y) = ($132E+Y)
+}
+```
+.
+
+```
+
 130d  A0 00       LDY #$00 ; intial offset for indrect STA
 130f  B9 2E 13    LDA $132E,Y
 1312  A2 01       LDX #$01 ; set bank number for indrect STA
@@ -28,7 +42,7 @@
 131c  20 24 E2    JSR $E224 ; Initialize the soft reset vector
 ```
 
-**Long jump  to $2000 in bank 1, where hacked GO64 routine is stored**
+**Long jump  to $2000 in bank 1, where hacked GO64 routine is now stored**
 ```
 131f  A9 01       LDA #$01 ; Destination bank
 1321  A0 20       LDY #$20 ; high address
@@ -41,7 +55,7 @@
 
 ---------------
 
-**HACKED "GO 64" routine (36 bytes long)**
+# HACKED "GO 64" routine (36 bytes long)
 ```
 ; Disable BASIC and Kernal, Set $4000-$FFFF as RAM ($D000-$DFFF: I/O)
 132e  A9 7E       LDA #$7E   ; 0111.1110 (LDA #$00 in original GO64 routine = BASIC + KERNAL + I/O)
@@ -74,35 +88,35 @@
 
 ---------------
 
-**Original GO64 routine**
+# Original GO64 routine in C128 ROM
 
 ```
 ; Configure locations $00 and $01
-E24B: A9 E3	    LDA #$E3
-E24D: 85 01	    STA $01
-E24F: A9 2F	    LDA #$2F
-E251: 85 00    	STA $00
+E24B  A9 E3     LDA #$E3
+E24D  85 01     STA $01
+E24F  A9 2F     LDA #$2F
+E251  85 00     STA $00
 
 ; copy $E263-$E26A to $02-$09
-E253: A2 08	    LDX #$08
-E255: BD 62 E2	LDA $E262,X
-E258: 95 01	    STA $01,X
-E25A: CA	      DEX
-E25B: D0 F8	    BNE $E255
+E253  A2 08     LDX #$08
+E255  BD 62 E2  LDA $E262,X
+E258  95 01     STA $01,X
+E25A  CA        DEX
+E25B  D0 F8     BNE $E255
 
-E25D: 8E 30 D0	STX $D030
-E260: 4C 02 00	JMP $02
+E25D  8E 30 D0  STX $D030
+E260  4C 02 00  JMP $02
 
 ; Code copied to $02 (8 bytes)
-E263: A9 F7	    LDA #$F7  ; 11.11.01.11  (= 11.11.0x.x1)
-E265: 8D 05 D5	STA $D505 ; enable 8502 and C64 mode at startup
-E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
+E263  A9 F7     LDA #$F7  ; 11.11.01.11  (= 11.11.0x.x1)
+E265  8D 05 D5  STA $D505 ; enable 8502 and C64 mode at startup
+E268  6C FC FF  JMP ($FFFC); RESET: jump to  $ff3d
 ```
 
------------------
+---------------
 
 
-**SUBROUTINE 1: Save color memory in user memory ($1800-$1bff, 1024 bytes)**
+# SUBROUTINE 1: Save color memory in user memory ($1800-$1bff, 1024 bytes)
 ```
 1352  A2 00       LDX #$00
 1354  BD 00 D8    LDA $D800,X
@@ -118,7 +132,9 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 136f  60          RTS
 ```
 
-**SUBROUTINE 2: calculate  pointers to bitmap and to color memory taking into account video bank stored in $17f3, store in page 0**
+---------------
+
+# SUBROUTINE 2: calculate  pointers to bitmap and to color memory taking into account video bank stored in $17f3, store in page 0
 
 ; FA  FB                FC  FD                         FE  FF
 ; bank base address     absolute bitmap address        absolute screen/color address
@@ -209,7 +225,7 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 
 ------------
 
-**NEW ROUTINE EXECUTED AT RESET: SYS 64738 in C64 mode will jump here**
+# NEW ROUTINE EXECUTED AT RESET: SYS 64738 in C64 mode will jump here
 
 ```
 ; Save registers:
@@ -239,7 +255,7 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 
 ----------------
 
-**SUBROUTINE 4: SHOW BITMAP VISIBLE AT RESET**
+# SUBROUTINE 4: SHOW BITMAP VISIBLE AT RESET
 
 ```
 ; set graphic mode 
@@ -276,9 +292,11 @@ E268: 6C FC FF	JMP ($FFFC)	; RESET: jump to  $ff3d
 1433  60          RTS
 ```
 
-----------
+---------------
 
-**MAIN (sys 5172)**
+
+# MAIN (sys 5172, to be manually called by user after coming back from C64 mode to C128 mode)
+
 ```
 ; black frame and background
 1434  A9 00       LDA #$00
@@ -365,9 +383,10 @@ grafica e per cambiare banco video
 
 ```
 
--------------
+---------------
 
-**TRANSFER AND SAVE**
+
+# TRANSFER AND SAVE ROUTINE
 
 ```
 1509  A9 04       LDA #$04  ; bin 00.00 01.00 - banco 0, ram comune in basso
