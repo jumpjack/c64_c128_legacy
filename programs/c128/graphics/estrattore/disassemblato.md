@@ -110,7 +110,57 @@ E260  4C 02 00  JMP $02
 ; Code copied to $02 (8 bytes)
 E263  A9 F7     LDA #$F7  ; 11.11.01.11  (= 11.11.0x.x1)
 E265  8D 05 D5  STA $D505 ; enable 8502 and C64 mode at startup
-E268  6C FC FF  JMP ($FFFC); RESET: jump to  $ff3d
+E268  6C FC FF  JMP ($FFFC); RESET: jump to  $fce2 (64738)
+```
+
+---------------
+# Compared GO64 routines
+
+ ```
+Original                                                            Hacked
+
+                                                                    ; Disable BASIC and Kernal, Set $4000-$FFFF as RAM ($D000-$DFFF: I/O)
+                                                                    132e  A9 7E       LDA #$7E   ; 0111.1110 (LDA #$00 in original GO64 routine = BASIC + KERNAL + I/O)
+                                                                    1330  8D 00 FF    STA $FF00  ; CONFIGURATION REGISTER (CR)
+
+
+                                                                    ; Hijack reset pointer to custom routine located at $13c7 rather than $e224, so SYS 64738 ($FCE2) will jump there:
+                                                                    1333  A9 C7       LDA #$C7
+                                                                    1335  8D F8 FF    STA $FFF8
+                                                                    1338  A9 13       LDA #$13
+                                                                    133a  8D F9 FF    STA $FFF9
+
+
+
+; Configure locations $00 and $01                                   ; reset I/O ports (unchanged w.r.t. original GO64)
+E24B  A9 E3     LDA #$E3                                            133d  A9 E3       LDA #$E3
+E24D  85 01     STA $01                                             133f  85 01       STA $01
+E24F  A9 2F     LDA #$2F                                            1341  A9 2F       LDA #$2F
+E251  85 00     STA $00                                             1343  85 00       STA $00
+
+
+
+; copy $E263-$E26A to $02-$09
+E253  A2 08     LDX #$08
+E255  BD 62 E2  LDA $E262,X
+E258  95 01     STA $01,X
+E25A  CA        DEX
+E25B  D0 F8     BNE $E255
+
+E25D  8E 30 D0  STX $D030
+E260  4C 02 00  JMP $02
+
+
+                                                                  ; Setup common RAM amount
+                                                                  1345  A9 48       LDA #$48  ; bin 01.00 10.00: abilita grafica in RAM 1; 1k di ram comune in alto da $FC00
+                                                                  1347  8D 06 D5    STA $D506 ; RAM configuration register (RCR) - dec 54534 (originale: #$04, 00.00 01.00, grafica in RAM 0; 1k di ram comune in basso)
+
+
+; Code copied to $02 (8 bytes)                                    ; Enable C64 ROM
+E263  A9 F7     LDA #$F7  ; 11.11.01.11  (= 11.11.0x.x1)          134a  A9 F7       LDA #$F7  ; 11.11.01.11  (= 11.11.0x.x1).
+E265  8D 05 D5  STA $D505 ; enable 8502 and C64 mode at startup   134c  8D 05 D5    STA $D505 ; enable 8502 and C64 mode at startup
+E268  6C FC FF  JMP ($FFFC); RESET: jump to  $fce2 (64738)        134f  4C E2 FC    JMP $FCE2  ; SYS 64738   (Commodore 64 standard reset, but hijacked to $13c7)
+
 ```
 
 ---------------
