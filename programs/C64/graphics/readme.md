@@ -32,16 +32,16 @@ CCC #14
 - Collocazione: 49152 - 51163 ($c000 - $c7db)
 - Lunghezza: 2012 bytes
 - Comandi: 
-  - Clear
-  - Graf (graf A,B)
-  - Mgraf (mgraf a,b,c,d)
-  - Text (text A,B)
-  - Color (color N)
-  - Plot (plot x,y,z)
-  - Draw (draw x1, y2, z1, x2, y2, z2)
-  - Circle (circle x, y, z, rx, ry)
-  - Arc (arc x, y, z, rx, ry, ai, af, p)  (angolo iniziale, angolo finale, precisione in radianti)
-
+   1) Clear
+   2) Graf (graf A,B)
+   3) Mgraf (mgraf a,b,c,d)
+   4) Text (text A,B)
+   5) Color (color N)
+   6) Plot (plot x,y,z)
+   7) Draw (draw x1, y2, z1, x2, y2, z2)
+   8) Circle (circle x, y, z, rx, ry)
+   9) Arc (arc x, y, z, rx, ry, ai, af, p)  (angolo iniziale, angolo finale, precisione in radianti)
+ 
 - [L'articolo originale (scansioni JPG) - CCC #14](https://ready64.org/ccc/pagina.php?ccc=14&pag=051.jpg)
 - [L'articolo originale (PDF) - CCC #14](https://archive.org/details/Commodore-Computer-Club-14/page/n49/mode/2up)
 
@@ -95,17 +95,20 @@ Richiamabili preponendo il carattere "freccia a sinistra" ai nomi riservati dei 
    - **Lunghezza totale: 1372 bytes**
    - Righe BASIC: 14870 - 15350
        - (routine interna di trasferimento dati =  c8b4 - c8d9)    
-       - grsave   = 51418-51467 (c8da-c90b) (59 bytes)
-       - grmerge  = 51468 (c90c-c90f) (4 bytes)
-       - grload   = 51472 (c910-c920) (16 bytes)
-       - grverify = 51489 (c921-c969) (72 bytes)
+   10) grsave   = 51418-51467 (c8da-c90b) (59 bytes)
+   11) grmerge  = 51468 (c90c-c90f) (4 bytes)
+   12) grload   = 51472 (c910-c920) (16 bytes)
+   13) grverify = 51489 (c921-c969) (72 bytes)
 - 3 nuovi comandi di scrittura a schermo grafico:
    - Collocazione: 50198 - 51826 (c416-ca72)  
    - **Lunghezza: 1629 bytes**
    - Righe BASIC: 19780 - 20350
-   - char     = 51568 (c970-c975) (6 bytes)
-   - vchar    = 51574 (c976-ca52) (221 bytes)
-   - inv      = 51795 (ca53-ca64) (18 bytes)
+   14) char     = 51568 (c970-c975) (6 bytes)
+   15) vchar    = 51574 (c976-ca52) (221 bytes)
+   16) inv      = 51795 (ca53-ca64) (18 bytes)
+- 1 nuovo comando extra
+  
+   17) Lens     = 51206 
 - Link:
    - [Disassemblato commentato](https://archive.org/details/Commodore-17/page/n63/mode/2up) (Rivista "Commodore" #17)
    - [Disco contenente il caricatore BASIC e il file binario](https://ready64.org/download/download.php?id_download=46)
