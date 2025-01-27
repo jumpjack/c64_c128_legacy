@@ -106,7 +106,7 @@ Richiamabili preponendo il carattere "freccia a sinistra" ai nomi riservati dei 
 - Link:
    - [Disassemblato commentato](https://archive.org/details/Commodore-17/page/n63/mode/2up) (Rivista "Commodore" #17)
    - [Disco contenente il caricatore BASIC e il file binario](https://ready64.org/download/download.php?id_download=46)
-   - [Caricatore basic](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/C64/graphics/toma-loader.html)  
+   - [Caricatore basic](https://jumpjack.github.io/c64_c128_legacy/programs/C64/graphics/toma-loader.html)  
    - [File. PRG](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/C64/graphics/toma%20routines.prg)
 
 ### Analisi del caricatore basic
