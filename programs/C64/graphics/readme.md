@@ -88,19 +88,19 @@ Richiamabili preponendo il carattere "freccia a sinistra" ai nomi riservati dei 
    - Collocazione: 49152 - 51163 ($c000 - $c7db)
    - Lunghezza: 2012 bytes (stessa di prima; dati aggiornati?)
 - Comandi salvataggio (nuovi):
-   - Routines: 51380 - 51561 (182 bytes)
-   - Parole: 51164 - 51183 (20 bytes)
-   - Indirizzi: 50190 - 50197 (8 bytes)
-   - grsave   = 51418
-   - grmerge  = 51468
-   - grload   = 51472
-   - grverify = 51489
+   - Routines: 51380 - 51561 (182 bytes)  (c8b4-c969)
+   - Parole: 51164 - 51183 (20 bytes)     (c7dc-c7ef) (non visibili in disassemblato)
+   - Indirizzi: 50190 - 50197 (8 bytes)   (c40e-c415) (non visibili in disassemblato)
+   - grsave   = 51418 (c8da)
+   - grmerge  = 51468 (c90c)
+   - grload   = 51472 (c910)
+   - grverify = 51489 (c921)
 - Comandi di scrittura a schermo grafico (nuovi):
-   - Collocazione: 50198 - 51826
-   - Lumghezza: 1629 bytes
-   - char     = 51568
-   - vchar    = 51574
-   - inv      = 51795
+   - Collocazione: 50198 - 51826 (c416-ca72)  
+   - Lunghezza: 1629 bytes
+   - char     = 51568 (c970)
+   - vchar    = 51574 (c976)
+   - inv      = 51795 (ca53)
 - Link:
    - [Disassemblato commentato](https://archive.org/details/Commodore-17/page/n63/mode/2up) (Rivista "Commodore" #17)
    - [Disco contenente il caricatore BASIC e il file binario](https://ready64.org/download/download.php?id_download=46)
