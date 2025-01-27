@@ -1,6 +1,9 @@
 # Routine di Toma
 
-Le famose "Routine grafiche di Danilo Toma", pubblicate nel sul numero 10 di Commodore Computer Club, che cambiarono radicalmente il modo di programmare graficamente il commodore 64
+Le famose "Routine grafiche di Danilo Toma", pubblicate nel sul numero 10 e sul numero 14 di Commodore Computer Club, che cambiarono radicalmente il modo di programmare graficamente il commodore 64.
+
+Intervista all'autore Danilo Toma.
+
 
 ## Versione 1.0
 
@@ -17,3 +20,4 @@ Attivate con sys 2061, e poi richiamabili preponendo il carattere "freccia a sin
 - [File. PRG](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/C64/graphics/toma%20routines.prg)
 - [L'articolo originale (scansioni JPG) - CCC #14](https://ready64.org/ccc/pagina.php?ccc=14&pag=051.jpg)
 - [L'articolo originale (PDF) - CCC #14](https://archive.org/details/Commodore-Computer-Club-14/page/n49/mode/2up)
+- [Disassemblato commentato](https://archive.org/details/Commodore-17/page/n63/mode/2up) (Rivista "Commodore" #17)
