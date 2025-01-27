@@ -84,12 +84,21 @@ CCC #14
 
 Richiamabili preponendo il carattere "freccia a sinistra" ai nomi riservati dei vari comandi.
 
+- Collocazione: 49152 - 51163 ($c000 - $c7db)
+- Lunghezza: 2012 bytes (stessa di prima; dati cambiati?)
+- Collocazione nuovi comandi salvataggio:
+   - Routines: 51380 - 51561 (182 bytes)
+   - Parole: 51164 - 51183 (20 bytes)
+   - indirizzi: 50190 - 50197 (8 bytes)
+
 Nuovi comandi:
 
 - grsave   = 51418
 - grmerge  = 51468
 - grload   = 51472
 - grverify = 51489
+
+Ulteriori  comandi:
 
 - char     = 51568
 - vchar    = 5157
