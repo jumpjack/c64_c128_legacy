@@ -67,6 +67,29 @@ Nuovi comandi:
 - Caricatore basic
 - [File. PRG](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/C64/graphics/toma%20routines.prg)
 
+### Analisi del caricatore basic
+
+Per rendere meno problematica la digitazione manuale di centinaia di valori "astrusi", questa versione prevedeva una
+suddivisione dei dati in 11 blocchi, per ognuno dei quali era presente una checksum separata.
+
+E' quindi presente un ciclo nidificato: quello esterno legge gli indirizzi di inizio e fine caricamento e la checksum,
+quello interno legge i dati del blosso e verifica la chacksum.
+
+Ho aggiunto numerosi spazio per migliorare la leggibilità; negli anni '80 ogni byte era prezioso, e gli spazi non si mettevano!
+
+
+```
+180 print chr$(147); spc(252) "lettura dei dati"
+190 :
+200 for k = 1 to 11 : read c, d, s : b = 0                    : rem Per ognuno degli 11 blocchi legge 3 numeri: inizio, fine, checksum
+210   for i = c to d : read a : b = b + a : poke i, a : next  : rem Legge blocco da da Inizio a Fine
+220   if b <> s then print "errore nel blocco n."; k : end    : rem Confronta con checksum
+230 next
+240 :
+250 sys 51000 : sys 49724                                     : rem Attiva nuovi comandi, Attiva nuova gestione errori
+260 printchr$(147);spc(252)"comandi attivati"
+270 end
+```
 
 
 
