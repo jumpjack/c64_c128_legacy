@@ -51,6 +51,17 @@ Comandi:
 
 Richiamabili preponendo il carattere "freccia a sinistra" ai nomi riservati dei vari comandi.
 
+Nuovi comandi:
+
+- grsave   = 51418
+- grmerge  = 51468
+- grload   = 51472
+- grverify = 51489
+
+- char     = 51568
+- vchar    = 5157
+- inv      = 51795
+
 - [Disassemblato commentato](https://archive.org/details/Commodore-17/page/n63/mode/2up) (Rivista "Commodore" #17)
 - [Disco contenente il caricatore BASIC e il file binario](https://ready64.org/download/download.php?id_download=46)
 - Caricatore basic
