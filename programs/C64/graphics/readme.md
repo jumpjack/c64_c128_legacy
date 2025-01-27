@@ -29,6 +29,18 @@ Richiamabili preponendo il carattere "freccia a sinistra" ai nomi riservati dei 
 
 CCC #14 
 
+Comandi: 
+
+- Clear
+- Graf (graf A,B)
+- Mgraf (mgraf a,b,c,d)
+- Text (text A,B)
+- Color (color N)
+- Plot (plot x,y,z)
+- Draw (draw x1, y2, z1, x2, y2, z2)
+- Circle (circle x, y, z, rx, ry)
+- Arc (arc x, y, z, rx, ry, ai, af, p)  (angolo iniziale, angolo finale, precisione in radianti)
+
 - [L'articolo originale (scansioni JPG) - CCC #14](https://ready64.org/ccc/pagina.php?ccc=14&pag=051.jpg)
 - [L'articolo originale (PDF) - CCC #14](https://archive.org/details/Commodore-Computer-Club-14/page/n49/mode/2up)
 
