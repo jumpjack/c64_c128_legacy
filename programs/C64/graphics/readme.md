@@ -84,30 +84,28 @@ CCC #14
 
 Richiamabili preponendo il carattere "freccia a sinistra" ai nomi riservati dei vari comandi.
 
-- Collocazione: 49152 - 51163 ($c000 - $c7db)
-- Lunghezza: 2012 bytes (stessa di prima; dati cambiati?)
-- Collocazione nuovi comandi salvataggio:
+- Comandi grafici:
+   - Collocazione: 49152 - 51163 ($c000 - $c7db)
+   - Lunghezza: 2012 bytes (stessa di prima; dati aggiornati?)
+- Comandi salvataggio (nuovi):
    - Routines: 51380 - 51561 (182 bytes)
    - Parole: 51164 - 51183 (20 bytes)
-   - indirizzi: 50190 - 50197 (8 bytes)
-
-Nuovi comandi:
-
-- grsave   = 51418
-- grmerge  = 51468
-- grload   = 51472
-- grverify = 51489
-
-Ulteriori  comandi:
-
-- char     = 51568
-- vchar    = 5157
-- inv      = 51795
-
-- [Disassemblato commentato](https://archive.org/details/Commodore-17/page/n63/mode/2up) (Rivista "Commodore" #17)
-- [Disco contenente il caricatore BASIC e il file binario](https://ready64.org/download/download.php?id_download=46)
-- Caricatore basic
-- [File. PRG](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/C64/graphics/toma%20routines.prg)
+   - Indirizzi: 50190 - 50197 (8 bytes)
+   - grsave   = 51418
+   - grmerge  = 51468
+   - grload   = 51472
+   - grverify = 51489
+- Comandi di scrittura a schermo grafico (nuovi):
+   - Collocazione: 50198 - 51826
+   - Lumghezza: 1629 bytes
+   - char     = 51568
+   - vchar    = 51574
+   - inv      = 51795
+- Link:
+   - [Disassemblato commentato](https://archive.org/details/Commodore-17/page/n63/mode/2up) (Rivista "Commodore" #17)
+   - [Disco contenente il caricatore BASIC e il file binario](https://ready64.org/download/download.php?id_download=46)
+   - Caricatore basic
+   - [File. PRG](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/C64/graphics/toma%20routines.prg)
 
 ### Analisi del caricatore basic
 
