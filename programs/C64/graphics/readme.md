@@ -44,6 +44,9 @@ CCC #14
  
 - [L'articolo originale (scansioni JPG) - CCC #14](https://ready64.org/ccc/pagina.php?ccc=14&pag=051.jpg)
 - [L'articolo originale (PDF) - CCC #14](https://archive.org/details/Commodore-Computer-Club-14/page/n49/mode/2up)
+- [Disco contenente il caricatore BASIC e il file binario](https://ready64.org/download/download.php?id_download=46)
+- [Caricatore basic](https://jumpjack.github.io/c64_c128_legacy/programs/C64/graphics/toma-loader.html)  
+- [File. PRG](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/C64/graphics/toma%20routines.prg)
 
 ### Analisi del caricatore BASIC
 
@@ -110,9 +113,17 @@ Richiamabili preponendo il carattere "freccia a sinistra" ai nomi riservati dei 
 17) Lens     = 51206 - 51376
 - Link:
    - [Disassemblato commentato](https://archive.org/details/Commodore-17/page/n63/mode/2up) (Rivista "Commodore" #17)
-   - [Disco contenente il caricatore BASIC e il file binario](https://ready64.org/download/download.php?id_download=46)
-   - [Caricatore basic](https://jumpjack.github.io/c64_c128_legacy/programs/C64/graphics/toma-loader.html)  
-   - [File. PRG](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/C64/graphics/toma%20routines.prg)
+   - Loader completo (17 comandi):
+     -  [.PRG](https://jumpjack.github.io/c64_c128_legacy/programs/C64/graphics/toma%20routines.prg)
+     -  [.D64](https://jumpjack.github.io/c64_c128_legacy/programs/C64/graphics/toma-all.d64)
+     -  [.TXT](https://jumpjack.github.io/c64_c128_legacy/programs/C64/graphics/toma-all-spaces.txt)
+  -  Singoli loader
+     -  [Comandi salvataggio](https://jumpjack.github.io/c64_c128_legacy/programs/C64/graphics/load-save%20pag.g..html)
+     -  [Disabilita restore](https://jumpjack.github.io/c64_c128_legacy/programs/C64/graphics/disab.restore.html)
+     -  [Scrittura a schermo](https://jumpjack.github.io/c64_c128_legacy/programs/C64/graphics/charinv(20000).html)
+     -  [Lente](https://jumpjack.github.io/c64_c128_legacy/programs/C64/graphics/lente%2025000-.html) 
+     -  [Assemblatore](https://jumpjack.github.io/c64_c128_legacy/programs/C64/graphics/assemblatore%20r..html) (crea un singolo programma da tutti i vari caricatori)
+ -  [Convertitore in minuscolo](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/tolower.html)
 
 ### Analisi del caricatore basic
 
