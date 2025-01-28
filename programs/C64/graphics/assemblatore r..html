@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="Generator" content="DirMaster v3.1.5">
+<meta name="Description" content="www.style64.org/dirmaster">
+<title>C:\Users\Luca\Downloads\assemblatore r..html</title><style  type="text/css">
+.c64_petscii{display:inline-block;clear:both;font-family:"C64 Pro Mono",monospace;font-size: 12pt;line-height: 16px;font-weight:normal;font-style:normal;letter-spacing:0;padding:0;margin:0}.c64_fg00{color:#000000;}
+.c64_fg01{color:#ffffff;}
+.c64_fg02{color:#682c2b;}
+.c64_fg03{color:#70a4b2;}
+.c64_fg04{color:#6f3d86;}
+.c64_fg05{color:#588d43;}
+.c64_fg06{color:#352879;}
+.c64_fg07{color:#b8c76f;}
+.c64_fg08{color:#6f4f25;}
+.c64_fg09{color:#433900;}
+.c64_fg0a{color:#9a6759;}
+.c64_fg0b{color:#444444;}
+.c64_fg0c{color:#6c6c6c;}
+.c64_fg0d{color:#9ad284;}
+.c64_fg0e{color:#6c5eb5;}
+.c64_fg0f{color:#959595;}
+.c64_bg00{background-color:#000000;}
+.c64_bg01{background-color:#ffffff;}
+.c64_bg02{background-color:#682c2b;}
+.c64_bg03{background-color:#70a4b2;}
+.c64_bg04{background-color:#6f3d86;}
+.c64_bg05{background-color:#588d43;}
+.c64_bg06{background-color:#352879;}
+.c64_bg07{background-color:#b8c76f;}
+.c64_bg08{background-color:#6f4f25;}
+.c64_bg09{background-color:#433900;}
+.c64_bg0a{background-color:#9a6759;}
+.c64_bg0b{background-color:#444444;}
+.c64_bg0c{background-color:#6c6c6c;}
+.c64_bg0d{background-color:#9ad284;}
+.c64_bg0e{background-color:#6c5eb5;}
+.c64_bg0f{background-color:#959595;}
+</style></head><body>
+<div class="c64_petscii c64_fg0e c64_bg01">
+  <div>10&nbsp;REM****************<br></div>
+  <div><span class=" c64_fg0e c64_bg01">20&nbsp;REM*"ASSEMBLATORE"*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">25&nbsp;REM*&nbsp;&nbsp;DEI&nbsp;MODULI&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">30&nbsp;REM*&nbsp;DELLE&nbsp;ROUTINE*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">35&nbsp;REM*&nbsp;&nbsp;GRAFICHE&nbsp;&nbsp;&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">40&nbsp;REM****************</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">60&nbsp;REM*&nbsp;PRIMA&nbsp;DI&nbsp;CA-&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">62&nbsp;REM*&nbsp;RICARE&nbsp;QUESTO*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">63&nbsp;REM*&nbsp;PROGRAMMA&nbsp;&nbsp;&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">65&nbsp;REM*&nbsp;ESEGUIRE:&nbsp;&nbsp;&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">66&nbsp;REM****************</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">67&nbsp;REM*&nbsp;POKE&nbsp;44,40&nbsp;&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">70&nbsp;REM*&nbsp;POKE&nbsp;10240,0&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">72&nbsp;REM*&nbsp;NEW&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">75&nbsp;REM****************</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">90&nbsp;:</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">100&nbsp;PRINTCHR$(147);SPC(252)"ATTENDERE&nbsp;PREGO"</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">110&nbsp;:</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">120&nbsp;FORI=2048TO2100:READA:B=B+A:POKEI,A:NEXT</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">130&nbsp;IFB&lt;&gt;6877THENPRINT"ERRORE&nbsp;NEI&nbsp;DATA":END</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">140&nbsp;:</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">150&nbsp;FORI=0TO11*256:POKE2112+I,PEEK(49152+I):NEXT</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">160&nbsp;:</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">170&nbsp;POKE43,1:POKE44,8:POKE45,64:POKE46,19</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">180&nbsp;PRINTCHR$(147);SPC(252)"OK&nbsp;PUOI&nbsp;SALVARE"</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">190&nbsp;:</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">200&nbsp;DATA&nbsp;0,11,8,0,0,158,50,48,54,49,0,0,0</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">210&nbsp;DATA&nbsp;169,64,133,247,169,8,133,248,169,0</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">220&nbsp;DATA&nbsp;133,249,169,192,133,250,162,11,160,0</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">230&nbsp;DATA&nbsp;177,247,145,249,200,208,249,230,248,230</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">240&nbsp;DATA&nbsp;250,202,208,240,32,56,199,76,60,194</span><br></div>
+</div>
+</body></html>

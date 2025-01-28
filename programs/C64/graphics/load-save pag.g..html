@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="Generator" content="DirMaster v3.1.5">
+<meta name="Description" content="www.style64.org/dirmaster">
+<title>C:\Users\Luca\Downloads\load-save pag.g..html</title><style  type="text/css">
+.c64_petscii{display:inline-block;clear:both;font-family:"C64 Pro Mono",monospace;font-size: 12pt;line-height: 16px;font-weight:normal;font-style:normal;letter-spacing:0;padding:0;margin:0}.c64_fg00{color:#000000;}
+.c64_fg01{color:#ffffff;}
+.c64_fg02{color:#682c2b;}
+.c64_fg03{color:#70a4b2;}
+.c64_fg04{color:#6f3d86;}
+.c64_fg05{color:#588d43;}
+.c64_fg06{color:#352879;}
+.c64_fg07{color:#b8c76f;}
+.c64_fg08{color:#6f4f25;}
+.c64_fg09{color:#433900;}
+.c64_fg0a{color:#9a6759;}
+.c64_fg0b{color:#444444;}
+.c64_fg0c{color:#6c6c6c;}
+.c64_fg0d{color:#9ad284;}
+.c64_fg0e{color:#6c5eb5;}
+.c64_fg0f{color:#959595;}
+.c64_bg00{background-color:#000000;}
+.c64_bg01{background-color:#ffffff;}
+.c64_bg02{background-color:#682c2b;}
+.c64_bg03{background-color:#70a4b2;}
+.c64_bg04{background-color:#6f3d86;}
+.c64_bg05{background-color:#588d43;}
+.c64_bg06{background-color:#352879;}
+.c64_bg07{background-color:#b8c76f;}
+.c64_bg08{background-color:#6f4f25;}
+.c64_bg09{background-color:#433900;}
+.c64_bg0a{background-color:#9a6759;}
+.c64_bg0b{background-color:#444444;}
+.c64_bg0c{background-color:#6c6c6c;}
+.c64_bg0d{background-color:#9ad284;}
+.c64_bg0e{background-color:#6c5eb5;}
+.c64_bg0f{background-color:#959595;}
+</style></head><body>
+<div class="c64_petscii c64_fg0e c64_bg01">
+  <div>14870&nbsp;REM*********************<br></div>
+  <div><span class=" c64_fg0e c64_bg01">14880&nbsp;REM*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">14890&nbsp;REM*&nbsp;COMANDI&nbsp;LOAD/SAVE&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">14900&nbsp;REM*&nbsp;&nbsp;PAGINA&nbsp;&nbsp;GRAFICA&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">14910&nbsp;REM*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">14920&nbsp;REM*&nbsp;INDIRIZZI:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">14930&nbsp;REM*&nbsp;GRSAVE=51418&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">14940&nbsp;REM*&nbsp;GRMERGE=51468&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">14950&nbsp;REM*&nbsp;GRLOAD=51472&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">14960&nbsp;REM*&nbsp;GRVERIFY=51489&nbsp;&nbsp;&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">14970&nbsp;REM*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">14980&nbsp;REM*********************</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">14990&nbsp;:</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15000&nbsp;B=0:FORI=51380TO51561:READA:B=B+A:POKEI,A:NEXT</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15010&nbsp;IFB&lt;&gt;24860THENPRINT"ERRORE&nbsp;NEI&nbsp;DATA&nbsp;DELLE&nbsp;ROUTINES":END</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15020&nbsp;B=0:FORI=51164TO51183:READA:B=B+A:POKEI,A:NEXT</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15030&nbsp;IFB&lt;&gt;1440THENPRINT"ERRORE&nbsp;NEI&nbsp;DATA&nbsp;DELLE&nbsp;PAROLE":END</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15040&nbsp;B=0:FORI=50190TO50197:READA:B=B+A:POKEI,A:NEXT</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15050&nbsp;IFB&lt;&gt;1082THENPRINT"ERRORE&nbsp;NEI&nbsp;DATA&nbsp;DEGLI&nbsp;INDIRIZZI":END</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15060&nbsp;:</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15070&nbsp;REM&nbsp;&nbsp;&nbsp;&nbsp;****&nbsp;&nbsp;&nbsp;&nbsp;ROUTINES&nbsp;&nbsp;&nbsp;****</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15080&nbsp;DATA&nbsp;169,0,133,249,133,251,162,32,168,32</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15090&nbsp;DATA&nbsp;94,197,32,88,201,177,249,36,251,145</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15100&nbsp;DATA&nbsp;251,200,208,247,230,250,230,252,202,208</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15110&nbsp;DATA&nbsp;240,32,109,197,32,96,201,96,104,104</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15120&nbsp;DATA&nbsp;169,224,133,250,169,160,133,252,169,36</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15130&nbsp;DATA&nbsp;141,197,200,32,180,200,32,212,225,32</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15140&nbsp;DATA&nbsp;88,201,162,64,160,191,169,160,133,254</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15150&nbsp;DATA&nbsp;169,0,133,253,169,253,32,216,255,32</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15160&nbsp;DATA&nbsp;96,201,144,3,76,249,224,96,169,17</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15170&nbsp;DATA&nbsp;208,2,169,36,141,197,200,169,224,133</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15180&nbsp;DATA&nbsp;252,169,160,133,250,169,0,240,2,169</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15190&nbsp;DATA&nbsp;1,133,10,104,104,32,212,225,32,88</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15200&nbsp;DATA&nbsp;201,165,10,162,0,160,160,32,213,255</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15210&nbsp;DATA&nbsp;32,96,201,176,205,165,10,240,10,162</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15220&nbsp;DATA&nbsp;28,32,183,255,41,16,208,13,96,32</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15230&nbsp;DATA&nbsp;180,200,32,183,255,41,191,240,245,162</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15240&nbsp;DATA&nbsp;29,76,55,164,120,169,254,37,1,133</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15250&nbsp;DATA&nbsp;1,96,72,169,1,5,1,133,1,88,104,96</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15260&nbsp;:</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15270&nbsp;REM&nbsp;&nbsp;&nbsp;&nbsp;****&nbsp;&nbsp;&nbsp;PAROLE&nbsp;&nbsp;&nbsp;****</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15280&nbsp;DATA&nbsp;3,71,82,148,3,71,82,147,3,71</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15290&nbsp;DATA&nbsp;82,149,7,71,82,77,69,82,71,69</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15300&nbsp;:</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15310&nbsp;REM&nbsp;&nbsp;&nbsp;&nbsp;****&nbsp;&nbsp;&nbsp;INDIRIZZI&nbsp;&nbsp;&nbsp;****</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15320&nbsp;DATA&nbsp;218,200,16,201,33,201,12,201</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15330&nbsp;:</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15340&nbsp;REM&nbsp;**&nbsp;ATTIVA&nbsp;I&nbsp;NUOVI&nbsp;COMANDI&nbsp;**</span><br></div>
+  <div><span class=" c64_fg0e c64_bg01">15350&nbsp;POKE51051,13</span><br></div>
+</div>
+</body></html>
