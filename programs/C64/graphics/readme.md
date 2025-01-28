@@ -83,7 +83,8 @@ CCC #14
 ["Commodore" #17](https://ready64.org/download/scheda_download.php?id_download=46)
 
 Richiamabili preponendo il carattere "freccia a sinistra" ai nomi riservati dei vari comandi.
-
+- Collocazione complessiva:  49152 - 51812
+- Lunghezza complessiva: 
 - Comandi grafici precedenti:
    - Collocazione: 49152 - 51163 ($c000 - $c7db)
    - **Lunghezza: 2012 bytes** (stessa di prima; dati aggiornati?)
@@ -106,7 +107,7 @@ Richiamabili preponendo il carattere "freccia a sinistra" ai nomi riservati dei 
 15) vchar    = 51574 (c976-ca52) (221 bytes)
 16) inv      = 51795 (ca53-ca64) (18 bytes)
 - 1 nuovo comando extra
-17) Lens     = 51206 
+17) Lens     = 51206 - 51376
 - Link:
    - [Disassemblato commentato](https://archive.org/details/Commodore-17/page/n63/mode/2up) (Rivista "Commodore" #17)
    - [Disco contenente il caricatore BASIC e il file binario](https://ready64.org/download/download.php?id_download=46)
