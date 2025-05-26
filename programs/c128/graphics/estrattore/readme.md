@@ -3,7 +3,7 @@
 # How to use
 
 - Download [extractor.d64](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/extractor.d64)
-- Download  .d64 image of desired game (for example, CAPTURED!")
+- Download  .d64 image of desired game (for example, "[CAPTURED!](https://csdb.dk/release/download.php?id=226716)")
 - Start VICE emulator for C128 (**x128.exe** on Windows)
 - Drag **extractor.d64** over the emulator window
 - type **load "binary",8,1** followed by ENTER (you can paste this command into VICE with ALT+INS)
@@ -21,6 +21,8 @@
 
 
 ------------
+
+# Spiegazione tecnica
 
 -  [Immagine disco](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/extractor.d64) del caricatore BASIC
 -  [File LM ](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/binary.prg) già pronto per caricamento in RAM
