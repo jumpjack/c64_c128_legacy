@@ -18,7 +18,8 @@
 - press spacebar until you see the desired image (only 4 images versions will be available)
 - press ENTER to save current image to disk
   
-
+## Important note
+This program does not work in VICE emulator 3.9, try [Z64K](https://www.z64k.com/) emulator instead (see [this](https://www.reddit.com/r/c64/comments/1i5qo1x/ripping_image_from_game_captured_where_is_color/) reddit)
 
 ------------
 
