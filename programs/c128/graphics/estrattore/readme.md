@@ -1,5 +1,27 @@
 ![image](https://github.com/user-attachments/assets/884a9489-6864-44ab-b88c-bb9c7893e10a)
 
+# How to use
+
+- Download [extractor.d64](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/extractor.d64)
+- Download  .d64 image of desired game (for example, CAPTURED!")
+- Start VICE emulator for C128 (**x128.exe** on Windows)
+- Drag **extractor.d64** over the emulator window
+- type **load "binary",8,1** followed by ENTER (you can paste this command into VICE with ALT+INS)
+- type **sys 4864** followed by ENTER : system will switch to hacked version of C64 mode
+- Drag "captured-PW.d64" over emulator window; **don't attach image from menu, else machine will be reset back to c128!**
+- type **load "captured!",8,1** (beware of "!") followed by ENTER 
+- wait full loading (up to track 9)
+- type **run** followed by ENTER; the game will launch
+- go to the image you want to grab (splash screen of Captured)
+- perform a soft reset (ALT+F9 in VICE) to switch back to C128
+- type **sys 5172** followed by ENTER
+- press spacebar until you see the desired image (only 4 images versions will be available)
+- press ENTER to save current image to disk
+  
+
+
+------------
+
 -  [Immagine disco](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/extractor.d64) del caricatore BASIC
 -  [File LM ](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/binary.prg) già pronto per caricamento in RAM
 -  [Listato basic](https://github.com/jumpjack/c64_c128_legacy/blob/main/programs/c128/graphics/estrattore/extract128.prg) in formato PRG
